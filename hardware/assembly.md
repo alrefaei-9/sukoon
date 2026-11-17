@@ -17,8 +17,8 @@ The NEEWER lavalier microphone runs on its own wire, separate from the headphone
 ## 3. Electronics
 
 1. Flash **Raspberry Pi OS (64-bit)** onto the 64 GB microSD card and run `system/install.sh` (see the main README).
-2. With the Pi **powered off**, plug the AB13X adapter into any USB port, then the microphone into its mic jack and the headphones into its headphone jack.
-3. Place the Pi and power bank in their carrier or enclosure. Leave airflow around the Pi: it ran at 45–50 °C in a 7-hour test. **Enclosure details TO CONFIRM.**
+2. With the Pi **powered off**, plug the ESSAGER (AB13X) adapter into any USB port, then the microphone into its mic jack and the headphones into its headphone jack.
+3. Fit the Pi in its fan case (fan leads on the GPIO 5 V and GND pins) and stack it on top of the power bank. Connect them with the 15 cm right-angle USB-C cable. Keep the case vents and fan uncovered: the Pi ran at 45–50 °C in a 7-hour test.
 4. Route the cables so they do not pull on the 3.5 mm plugs while the headset is worn.
 
 ## 4. First power-up check

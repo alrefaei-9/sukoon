@@ -1,17 +1,16 @@
 # Bill of materials
 
-Items marked **TO CONFIRM** are not yet verified against the built unit.
-
 ## Electronics
 
 | # | Item | Qty | Specification | Role |
 |---|---|---|---|---|
 | 1 | Raspberry Pi 4 Model B | 1 | 4 GB RAM, Rev 1.4, quad-core Cortex-A72 at 1.8 GHz | Runs the audio engine, the SafeSound dashboard and the Wi-Fi hotspot |
 | 2 | microSD card | 1 | 64 GB (Raspberry Pi OS 64-bit, Debian 13) | Operating system, software, test recordings |
-| 3 | USB audio adapter | 1 | AB13X USB Audio (USB ID `0020:0b21`), 48 kHz capture and playback, separate 3.5 mm mic and headphone jacks | ADC for the microphone, DAC for the headphones |
+| 3 | USB audio adapter | 1 | ESSAGER USB audio adapter, AB13X chip (USB ID `0020:0b21`), 48 kHz capture and playback, separate 3.5 mm mic and headphone jacks | ADC for the microphone, DAC for the headphones |
 | 4 | Microphone | 1 | NEEWER lavalier lapel microphone: omnidirectional condenser, wired, clip-on, 3.5 mm plug into the adapter's mic jack | Picks up the surroundings |
 | 5 | USB power bank | 1 | Generic, 10,000 mAh, 5 V USB output (3 A recommended) | Portable power (7 h 27 min measured) |
-| 6 | USB-C cable | 1 | Short and thick (low voltage drop). **Length TO CONFIRM** | Power bank to Pi |
+| 6 | USB-C cable | 1 | 15 cm, braided, right-angle USB-C plug (short and thick for low voltage drop) | Power bank to Pi |
+| 6a | Raspberry Pi 4 case | 1 | Black ventilated case with a 5 V cooling fan (fan powered from the GPIO 5 V and GND pins) | Protects the Pi and keeps it cool |
 
 Alternative audio adapter recognised by the software: USB Audio `1620:0b21` (same 48 kHz requirement).
 
@@ -39,7 +38,7 @@ The earcups are 3D-printed from the open-source **[Ouroboros](https://github.com
 | # | Item | Qty | Notes |
 |---|---|---|---|
 | 19 | Microphone mount | — | The lavalier's own clip: it attaches to the headphone cable or the wearer's clothing (separate wire from the headphone cable) |
-| 20 | Pi / power bank enclosure or carrier | 1 | **TO CONFIRM** (worn on the headset, belt or pocket) |
+| 20 | Pi / power bank mounting | 1 | The cased Pi sits on top of the power bank as one stacked unit, joined by the 15 cm USB-C cable |
 
 ## Software (installed by `system/install.sh`)
 

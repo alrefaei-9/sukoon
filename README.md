@@ -79,11 +79,11 @@ The processing stage is selectable as **Test versions 1 to 5** from the dashboar
 |---|---|---|
 | Processor | **Raspberry Pi 4 Model B**, 4 GB RAM (Rev 1.4) | Runs the audio engine, the dashboard and the Wi-Fi hotspot. CPU fixed at 1.8 GHz (performance governor) |
 | Storage | **64 GB microSD card** | Raspberry Pi OS (64-bit, Debian 13), software and test recordings |
-| Audio interface (ADC/DAC) | **AB13X USB audio adapter** (USB ID `0020:0b21`), with separate mic and headphone 3.5 mm jacks | Digitises the microphone and drives the headphones at 48 kHz. Usable bandwidth about 7.5–8 kHz. A second adapter (`1620:0b21`) is also recognised |
+| Audio interface (ADC/DAC) | **ESSAGER USB audio adapter** (AB13X chip USB ID `0020:0b21`), with separate mic and headphone 3.5 mm jacks | Digitises the microphone and drives the headphones at 48 kHz. Usable bandwidth about 7.5–8 kHz. A second adapter (`1620:0b21`) is also recognised |
 | Headphones / earcups | **DIY 3D-printed closed-back headphones** built from the open-source [Ouroboros](https://github.com/CapraAudio/Ouroboros) design by Capra Audio, **3.5 mm** connector version: 60 mm 32 Ω drivers, Yaxi pads, housings and headband printed in **PETG**, gaskets in **TPU 95A**, 1.25 m cable | Deliver the processed sound. The closed back and pads give passive isolation, so the processed signal dominates |
 | Microphone | **NEEWER lavalier lapel microphone** (omnidirectional condenser, wired, clip-on), 3.5 mm plug into the adapter's mic jack. Separate wire from the headphone cable; clips onto the cable or the wearer's clothing | Picks up the surroundings for processing |
 | Power | **Generic 10,000 mAh USB power bank** + USB-C cable | Powers the Pi and the adapter. 7 h 27 min measured on one charge |
-| Enclosure / mounting | **DIY 3D-printed headset** parts. Pi mounting and enclosure details **TO CONFIRM** | Wearable assembly |
+| Enclosure / mounting | Raspberry Pi in a black ventilated case with a 5 V cooling fan, stacked on top of the power bank as one compact unit; 15 cm right-angle USB-C cable between them. Headphones 3D-printed (PETG, TPU 95A) | Wearable assembly |
 | Remote control | Any iPhone, iPad or laptop with a browser | Opens the dashboard over the Pi's hotspot |
 
 Full bill of materials, wiring diagram and assembly notes: **[hardware/](hardware/)**.

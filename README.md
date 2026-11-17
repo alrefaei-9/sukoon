@@ -2,7 +2,7 @@
 
 # Sukoon · سكون
 
-**A wearable, real-time adaptive audio filtering headset that takes the bang out of the world and leaves the voices in.**
+**A wearable, real-time adaptive audio filtering headset for people with startle epilepsy: it takes the bang out of the world and leaves the voices in.**
 
 Raspberry Pi 4B · RNNoise neural noise suppression · adaptive sound-event detection · iPhone/iPad dashboard
 
@@ -18,7 +18,7 @@ Raspberry Pi 4B · RNNoise neural noise suppression · adaptive sound-event dete
 
 ## Overview
 
-Many people are sound-sensitive: autistic people, people with hyperacusis, misophonia or PTSD, and anyone whose nervous system reacts strongly to sudden noise. For them a slammed door, a dropped tray or a clap is not just loud but painful. These sounds cause auditory stress and make ordinary places hard to be in. Ordinary earplugs and noise-cancelling headphones mute everything, including the people the wearer wants to hear and the alarms they need to hear. **Sukoon** (Arabic for *calm, stillness*) is a hear-through headset that listens to the world on the wearer's behalf. A microphone feeds a Raspberry Pi 4B, which processes the sound in 10 ms frames and plays a cleaned version into closed headphones about 70 ms later. Sudden bangs are cut by 25 to 40 dB, speech stays clear and levelled, sirens are turned down but kept audible for safety, and steady background noise is not replayed. It needs no tuning per room, starts by itself when powered on, and can be controlled from an iPhone or iPad.
+Sukoon is designed for people with **startle epilepsy**, a form of reflex epilepsy in which seizures are triggered by a sudden, unexpected stimulus, most often a loud noise such as a slammed door, a dropped tray or a clap. Because these sounds cannot be predicted, everyday places like classrooms, cafeterias and streets carry a constant risk. Earplugs and noise-cancelling headphones mute everything, including the people the wearer wants to hear and the alarms they need to hear, and they do little against a sharp bang. **Sukoon** (Arabic for *calm, stillness*) is a hear-through headset that listens to the world on the wearer's behalf and removes the sudden-sound trigger before it reaches the ear. A microphone feeds a Raspberry Pi 4B, which processes the sound in 10 ms frames and plays a cleaned version into closed headphones about 70 ms later. Sudden bangs are cut by 25 to 40 dB, speech stays clear and levelled, sirens are turned down but kept audible for safety, and steady background noise is not replayed. It needs no tuning per room, starts by itself when powered on, and can be controlled from an iPhone or iPad.
 
 ## Key features
 
@@ -212,4 +212,4 @@ docs/           user guide, dashboard reference, results data, images
 
 Sukoon's code and documentation are released under the [MIT License](LICENSE). Third-party components keep their own licences: see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). The Ouroboros headphone design is licensed separately by Capra Audio and is not covered by this repository's licence.
 
-> Sukoon is a student engineering project, not a medical device. It is not intended to diagnose, treat or prevent any condition, and it does not replace certified hearing protection.
+> Sukoon is a student engineering project for people with startle epilepsy. It is not a medical device: it has not been clinically tested, it is not intended to diagnose, treat or prevent epilepsy or seizures, and it does not replace medical care, prescribed treatment or certified hearing protection.

@@ -1,0 +1,4 @@
+{
+  "_help": "Optional. Copy to dashboard/soundcard.json to force one card when both are plugged in. override = USB id (lsusb, e.g. 0020:0b21 AB13X, 1620:0b21 USB Audio) or ALSA card name. Takes effect at the next service start (or the next Off/On). Delete the file to go back to the fixed priority.",
+  "override": "0020:0b21"
+}

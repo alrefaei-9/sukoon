@@ -1,0 +1,13 @@
+# Sukoon: hold the CPU at its full clock (performance governor) so the 10 ms audio frames
+# never wait for the clock to ramp up. Installed by install.sh.
+[Unit]
+Description=Sukoon: CPU performance governor (steady clock for real-time audio)
+After=sysinit.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/sh -c 'for f in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do echo performance > "$f"; done'
+
+[Install]
+WantedBy=multi-user.target

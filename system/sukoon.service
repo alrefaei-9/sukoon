@@ -1,0 +1,27 @@
+# Sukoon: dashboard service. It finds the USB sound card at boot, runs the microphone check,
+# plays the welcome voice and starts the audio engine (src/sukoon_engine.py) by itself.
+# Template: install.sh replaces @USER@, @REPO@ and @PORT@ and installs it as
+# /etc/systemd/system/sukoon.service.
+[Unit]
+Description=Sukoon adaptive hear-through headset (dashboard and audio engine)
+After=network.target sound.target sukoon-governor.service
+Wants=sukoon-governor.service
+
+[Service]
+Type=simple
+User=@USER@
+Group=@USER@
+SupplementaryGroups=audio
+WorkingDirectory=@REPO@
+ExecStart=@REPO@/.venv/bin/python dashboard/server.py
+Environment=PYTHONUNBUFFERED=1
+Environment=SUKOON_HTTP_PORT=@PORT@
+# Lets the server start the audio engine with real-time priority (chrt -f 70).
+LimitRTPRIO=95
+Restart=on-failure
+RestartSec=3
+KillMode=control-group
+TimeoutStopSec=20
+
+[Install]
+WantedBy=multi-user.target

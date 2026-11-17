@@ -1,0 +1,1954 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-theme-pref="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sukoon">
+<meta name="theme-color" content="#0d1012">
+<title>Sukoon</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230d1012'/%3E%3Ccircle cx='16' cy='16' r='8.5' fill='none' stroke='%232fb5a3' stroke-width='3.4'/%3E%3C/svg%3E">
+<script>
+/* colour mode before first paint: saved choice, else the device setting */
+(function () { var p = 'auto'; try { var t = localStorage.getItem('sukoon-theme'); if (t === 'light' || t === 'dark') p = t; } catch (e) {}
+  var d = document.documentElement; d.dataset.themePref = p; d.dataset.theme = p === 'auto' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : p; })();
+</script>
+<style>
+@font-face { font-family: Inter; font-weight: 400; font-style: normal; font-display: swap; src: url(fonts/Inter-Regular.woff2) format("woff2"); }
+@font-face { font-family: Inter; font-weight: 500; font-style: normal; font-display: swap; src: url(fonts/Inter-Medium.woff2) format("woff2"); }
+@font-face { font-family: Inter; font-weight: 600; font-style: normal; font-display: swap; src: url(fonts/Inter-SemiBold.woff2) format("woff2"); }
+/* Arabic wordmark only: Noto Kufi Arabic SemiBold, subset to the four letters of the name (SIL OFL 1.1) */
+@font-face { font-family: "Sukoon Kufi"; font-weight: 600; font-style: normal; font-display: swap; src: url(fonts/NotoKufiArabic-SemiBold-subset.woff2) format("woff2"); }
+:root {
+  --ground:#0d1012; --surface:#15191c; --raised:#1a1f23; --sunk:#101417; --active:#232a2f; --border:#262d32; --rule:#20262b; --control:#3d474f;
+  --text:#f1f4f5; --muted:#9ba6ad; --soft:#cbd3d8; --faint:#808b93; --primary:#0c7f72; --on-primary:#ffffff;
+  --accent:#2fb5a3; --accent-ink:#7fdccd; --accent-tint:rgba(47,181,163,.16); --accent2:#ff9f45; --accent2-tint:rgba(255,159,69,.16); --accent2-ink:#ffc48a;
+  --bar:rgba(13,16,18,.78); --bar-line:rgba(255,255,255,.08); --shadow:none;
+  --positive:#2faa4f; --negative:#eb5757; --warning:#f2c94c; --pos-glow:rgba(47,170,79,.35); --neg-glow:rgba(235,87,87,.35);
+  --neg-bg:#2b1517; --neg-ink:#f4a3a3; --warn-bg:#2a2410; --warn-ink:#f7d154; --neu-bg:#1d2327; --neu-ink:#cbd3d8;
+  --solid:#15191c;
+  /* chart series: orange IN (sound arriving), teal OUT (what Sukoon plays), orange bangs, text colour for speech */
+  --series-in:#ff9f45; --series-out:#2fb5a3; --series-out-fill:rgba(47,181,163,.16);
+  --series-bang:#ff9f45; --series-bang-fill:rgba(255,159,69,.20); --series-speech:#f1f4f5;
+  --warn-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1.5 15.2 14H.8z' fill='none' stroke='black' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M8 6v4' stroke='black' stroke-width='1.6' stroke-linecap='round'/%3E%3Ccircle cx='8' cy='12' r='.9'/%3E%3C/svg%3E");
+  --font: Inter, -apple-system, "SF Pro Text", system-ui, "Segoe UI", sans-serif;
+  --r-card:18px; --r-item:12px; --r-pill:999px; --bar-h:60px; --tab-h:58px;
+  color-scheme: dark;
+}
+:root[data-theme="light"] {
+  --ground:#f2f4f5; --surface:#ffffff; --raised:#f8f9fa; --sunk:#eef1f3; --active:#e5e9ec; --border:#dfe4e8; --rule:#e8ecef; --control:#b6bfc6;
+  --text:#0c1113; --muted:#55616a; --soft:#36424b; --faint:#66717a; --primary:#0b6f64; --on-primary:#ffffff;
+  --accent:#0b6f64; --accent-ink:#095d54; --accent-tint:rgba(11,111,100,.10); --accent2:#c9650c; --accent2-tint:rgba(201,101,12,.12); --accent2-ink:#9a4a06;
+  --bar:rgba(255,255,255,.82); --bar-line:rgba(12,17,19,.09); --shadow:0 1px 2px rgba(16,24,32,.05), 0 6px 20px rgba(16,24,32,.05);
+  --positive:#1f8a3a; --negative:#c93a32; --warning:#b08600; --pos-glow:rgba(31,138,58,.25); --neg-glow:rgba(201,58,50,.25);
+  --neg-bg:#fdecec; --neg-ink:#8a1f1a; --warn-bg:#fff4c7; --warn-ink:#6b5200; --neu-bg:#eef1f3; --neu-ink:#36424b;
+  --solid:#ffffff;
+  --series-in:#c9650c; --series-out:#0b6f64; --series-out-fill:rgba(11,111,100,.13);
+  --series-bang:#c9650c; --series-bang-fill:rgba(201,101,12,.18); --series-speech:#0c1113;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; min-height: 100vh; background: var(--ground); color: var(--text); font: 400 14px/20px var(--font); letter-spacing: -.05px;
+  font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; -webkit-tap-highlight-color: transparent;
+  padding: 0 0 calc(var(--tab-h) + 28px + env(safe-area-inset-bottom)); }
+h1, h2, h3 { letter-spacing: -.2px; margin: 0; font-weight: 600; }
+p { margin: 0; }
+button, input, select { font: inherit; letter-spacing: inherit; color: inherit; }
+[hidden] { display: none !important; }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left)); }
+
+/* chrome: the only translucent layers are the app bar and the tab bar */
+.appbar { position: sticky; top: 0; z-index: 10; background: var(--bar); border-bottom: 1px solid var(--bar-line);
+  -webkit-backdrop-filter: blur(18px) saturate(150%); backdrop-filter: blur(18px) saturate(150%); padding-top: env(safe-area-inset-top); }
+.appbar-in { max-width: 1240px; margin: 0 auto; height: var(--bar-h); display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 0 max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left)); }
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.brand svg { width: 26px; height: 26px; flex: none; color: var(--accent); }
+.brand h1 { font-size: 19px; line-height: 24px; font-weight: 600; letter-spacing: -.4px; }
+.brand .ar { font: 600 17px/24px "Sukoon Kufi", "Noto Kufi Arabic", "Geeza Pro", "Segoe UI", Tahoma, sans-serif; color: var(--muted); letter-spacing: 0;
+  padding-left: 10px; border-left: 1px solid var(--control); unicode-bidi: isolate; }
+.status-group { display: flex; gap: 8px; align-items: center; }
+.badge { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 11px; border-radius: var(--r-pill); font: 500 12px/16px var(--font); white-space: nowrap;
+  background: var(--neu-bg); color: var(--neu-ink); border: 1px solid var(--border); transition: border-color .15s, box-shadow .15s; }
+.badge.pos { border-color: var(--positive); box-shadow: 0 0 0 3px var(--pos-glow); }
+.badge.neg, .badge.rec { border-color: var(--negative); box-shadow: 0 0 0 3px var(--neg-glow); background: var(--neg-bg); color: var(--neg-ink); }
+button.badge { cursor: pointer; }
+.icon-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: var(--neu-bg); color: var(--soft); display: grid; place-items: center; cursor: pointer; position: relative; flex: none; }
+.icon-btn::after { content: ""; position: absolute; inset: -5px; }
+.icon-btn svg { width: 17px; height: 17px; }
+.icon-btn [data-ico] { display: none; }
+:root[data-theme-pref="auto"] .icon-btn [data-ico="auto"], :root[data-theme-pref="light"] .icon-btn [data-ico="light"], :root[data-theme-pref="dark"] .icon-btn [data-ico="dark"] { display: block; }
+
+/* tabs: a bottom tab bar on phones, a centred segmented bar inside the app bar from tablet width up */
+nav#tabs { position: fixed; z-index: 11; left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;
+  padding: 6px max(8px, env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+  background: var(--bar); border-top: 1px solid var(--bar-line); -webkit-backdrop-filter: blur(18px) saturate(150%); backdrop-filter: blur(18px) saturate(150%); }
+nav#tabs button { height: 46px; border: 0; border-radius: 12px; background: none; color: var(--muted); font-weight: 500; font-size: 12px; cursor: pointer;
+  display: grid; justify-items: center; align-content: center; gap: 3px; transition: background-color .15s, color .15s; }
+nav#tabs button svg { width: 20px; height: 20px; }
+nav#tabs button[aria-selected="true"] { color: var(--accent-ink); background: var(--accent-tint); }
+
+/* banners */
+.banners { display: grid; gap: 10px; margin: 14px 0 0; }
+.banners:empty { display: none; }
+.banner { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; border-radius: 14px; padding: 12px 16px; border: 1px solid transparent; }
+.banner.neg { background: var(--neg-bg); color: var(--neg-ink); border-color: var(--negative); }
+.banner.warn { background: var(--warn-bg); color: var(--warn-ink); }
+.banner b { font-weight: 600; display: block; }
+.banner .dot { width: 10px; height: 10px; }
+
+main { margin-top: 16px; }
+.panel { display: grid; gap: 14px; grid-template-columns: 1fr; align-items: start; }
+.page-title { grid-column: 1 / -1; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 6px 2px 0; }
+.page-title h2 { font-size: 22px; line-height: 28px; font-weight: 600; letter-spacing: -.5px; }
+.page-title p { color: var(--muted); font-size: 13px; text-align: right; }
+.group-title { grid-column: 1 / -1; font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: .5px; text-transform: uppercase; color: var(--faint); padding: 10px 2px 0; }
+.card { border-radius: var(--r-card); padding: 20px; min-width: 0; background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow); }
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; min-height: 24px; flex-wrap: wrap; }
+.card-head h2 { font-size: 15px; line-height: 20px; font-weight: 600; }
+.card-foot { margin-top: 12px; font-size: 13px; color: var(--muted); }
+.label { font-size: 13px; color: var(--muted); }
+.cap { font-size: 12px; line-height: 16px; color: var(--faint); }
+.big { font-size: 28px; line-height: 32px; font-weight: 600; letter-spacing: -.6px; }
+.unit { font-size: 13px; color: var(--muted); margin-left: 4px; font-weight: 400; letter-spacing: -.05px; }
+
+.chip { display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 9px; border-radius: var(--r-pill); font-size: 12px; line-height: 16px; font-weight: 500; white-space: nowrap; background: var(--neu-bg); color: var(--neu-ink); }
+.chip.warn { background: var(--warn-bg); color: var(--warn-ink); }
+.chip.warn::before, .warn-icon { content: ""; width: 12px; height: 12px; flex: none; background: currentColor; display: inline-block;
+  -webkit-mask: var(--warn-svg) center / contain no-repeat; mask: var(--warn-svg) center / contain no-repeat; }
+.warn-icon { width: 16px; height: 16px; color: var(--warn-ink); }
+.chip.accent2 { background: var(--accent2-tint); color: var(--accent2-ink); }
+.chip.neg { background: var(--neg-bg); color: var(--neg-ink); }
+.chips { display: inline-flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--faint); flex: none; transition: background-color .15s; }
+.dot.pos { background: var(--positive); } .dot.neg { background: var(--negative); } .dot.warn { background: var(--warning); } .dot.o2 { background: var(--accent2); }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 38px; min-width: 44px; padding: 0 16px; border-radius: var(--r-pill);
+  border: 1px solid var(--control); background: var(--surface); color: var(--text); font-weight: 500; cursor: pointer; white-space: nowrap;
+  transition: background-color .15s, color .15s, transform .15s; position: relative; }
+.btn::after { content: ""; position: absolute; inset: -4px; }
+.btn:active:not(:disabled) { transform: scale(.97); }
+.btn.primary { background: var(--primary); color: var(--on-primary); border-color: transparent; }
+.btn.armed { background: var(--neg-bg); color: var(--neg-ink); border-color: var(--negative); }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn.wide { width: 100%; height: 54px; font-size: 16px; font-weight: 600; border-radius: 16px; }
+a.btn { text-decoration: none; }
+.linkish { background: none; border: 0; color: var(--accent-ink); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--accent); padding: 0; cursor: pointer; min-height: 44px; }
+
+/* lists: one panel with hairline dividers */
+.rows { display: grid; border: 1px solid var(--border); border-radius: var(--r-item); background: var(--raised); overflow: hidden; }
+.rows:empty { display: none; }
+.row { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; padding: 10px 14px; min-height: 52px; min-width: 0;
+  border-radius: var(--r-item); background: var(--raised); border: 1px solid var(--border); }
+.rows > .row, .rows > label.row { border: 0; border-radius: 0; background: none; }
+.rows > * + * { border-top: 1px solid var(--rule); }
+.rows > .empty { border: 0; border-radius: 0; }
+.row.two { grid-template-columns: 1fr auto; }
+.row > span:first-child:not(.dot):not(.ck), .row > .dot + span, .row > .ck + span { min-width: 0; }
+.row .sub { display: block; font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+.row .val { text-align: right; white-space: nowrap; }
+.row.wrapval { grid-template-columns: 1fr; gap: 4px; } .row.wrapval .val { text-align: left; white-space: normal; color: var(--soft); overflow-wrap: anywhere; }
+.row.tap { cursor: pointer; text-align: left; width: 100%; font: inherit; color: inherit; transition: background-color .15s; }
+.row.tap:active { background: var(--active); }
+label.row { cursor: pointer; }
+.empty { border: 1px dashed var(--control); border-radius: var(--r-item); padding: 18px 16px; color: var(--muted); text-align: center; font-size: 13px; }
+
+.seg { display: flex; background: var(--sunk); border: 1px solid var(--border); border-radius: var(--r-pill); padding: 3px; gap: 2px; }
+.seg button { flex: 1; height: 38px; min-width: 44px; padding: 0 12px; border: 0; border-radius: var(--r-pill); background: none; color: var(--muted); font-weight: 500; cursor: pointer; transition: background-color .15s, color .15s; white-space: nowrap; }
+.seg button[aria-pressed="true"] { background: var(--accent-tint); color: var(--accent-ink); }
+.seg button:disabled { opacity: .45; cursor: default; }
+.seg.small button { height: 32px; font-size: 13px; }
+.card-head .seg, .review-head .seg { flex: none; max-width: 100%; }
+.seg button { flex: 1 0 auto; }
+
+.toggle { appearance: none; -webkit-appearance: none; position: relative; width: 44px; height: 26px; border-radius: var(--r-pill); background: var(--control); margin: 0; flex: none; cursor: pointer; transition: background-color .15s; }
+.toggle::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform .15s; box-shadow: 0 1px 2px rgba(0,0,0,.25); }
+.toggle:checked { background: var(--accent); }
+.toggle:checked::after { transform: translateX(18px); }
+
+/* sliders */
+.srow { padding: 12px 14px; border-radius: var(--r-item); background: var(--raised); border: 1px solid var(--border); }
+.srow + .srow { margin-top: 8px; }
+.srow-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.srow-head label, .srow-head .lab { font-weight: 500; }
+.srow-head .val { color: var(--soft); white-space: nowrap; }
+.track { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; touch-action: pan-y; }
+.track .cap { min-width: 44px; } .track .cap:last-child { text-align: right; }
+.slider { width: 100%; height: 44px; margin: 0; accent-color: var(--accent); background: transparent; cursor: pointer; touch-action: pan-y; }
+.help { font-size: 13px; color: var(--muted); }
+.srow .chip { margin-left: 8px; vertical-align: 1px; }
+.srow .seg { margin: 10px 0 8px; }
+
+details.explain { margin-top: 12px; border-top: 1px solid var(--rule); padding-top: 4px; }
+details.explain summary { list-style: none; display: flex; align-items: center; justify-content: space-between; min-height: 44px; cursor: pointer; color: var(--soft); font-size: 13px; }
+details.explain summary::-webkit-details-marker { display: none; }
+details.explain summary::after { content: ""; width: 7px; height: 7px; border-right: 1.5px solid var(--faint); border-bottom: 1.5px solid var(--faint); transform: rotate(45deg); transition: transform .2s; margin-right: 4px; }
+details.explain[open] summary::after { transform: rotate(225deg); }
+details.explain p { font-size: 13px; color: var(--muted); }
+details.explain p + p { margin-top: 8px; }
+
+/* home */
+.a-power { display: grid; align-content: start; }
+.power-state { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.power-state .big { display: flex; align-items: center; gap: 10px; }
+.power-state .dot { width: 12px; height: 12px; }
+.a-power .power-state .big { font-size: 34px; line-height: 40px; }
+.a-power .power-state .dot.pos { box-shadow: 0 0 0 5px var(--pos-glow); }
+.power-hint { margin-top: 10px; font-size: 13px; color: var(--muted); text-align: center; min-height: 20px; }
+.meters { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.meter, .stat { padding: 12px 14px; border-radius: var(--r-item); background: var(--raised); border: 1px solid var(--border); min-width: 0; }
+.bar { height: 6px; border-radius: var(--r-pill); background: var(--sunk); margin-top: 10px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; border-radius: var(--r-pill); }
+.chart { position: relative; height: 210px; border-radius: var(--r-item); border: 1px solid var(--border); background: var(--sunk); overflow: hidden; }
+.chart canvas { display: block; width: 100%; height: 100%; }
+.chart canvas.reviewing { touch-action: pan-y; cursor: grab; }
+.chart .empty { position: absolute; inset: 12px; display: grid; place-items: center; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 12px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+.legend i { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+.legend i.box { width: 10px; height: 10px; border-radius: 3px; }
+.review { margin-top: 12px; display: grid; gap: 4px; }
+.review-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.version-note { margin-top: 12px; color: var(--muted); font-size: 13px; }
+
+.ck { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--control); background: var(--sunk); color: var(--faint); font-size: 12px; font-weight: 600; }
+.ck svg { width: 12px; height: 12px; }
+.ck[data-ok="true"] { background: var(--positive); border-color: transparent; color: #fff; }
+.ck[data-ok="false"] { background: var(--negative); border-color: transparent; color: #fff; }
+.heard { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; padding: 10px 14px; }
+
+.spec { position: relative; height: 230px; border-radius: var(--r-item); border: 1px solid var(--border); background: var(--sunk); }
+.spec svg { display: block; width: 100%; height: 100%; overflow: visible; touch-action: pan-y; }
+.spec .grid { stroke: var(--rule); stroke-width: 1; }
+.spec .tick { fill: var(--faint); font-size: 10px; }
+.spec .l-in { fill: none; stroke: var(--series-in); stroke-width: 1.5; stroke-linejoin: round; }
+.spec .l-out { fill: none; stroke: var(--series-out); stroke-width: 2.25; stroke-linejoin: round; }
+.spec .cut { fill: var(--series-bang-fill); stroke: var(--series-bang); stroke-width: 1; }
+.spec .cut-label { fill: var(--soft); font-size: 11px; font-weight: 500; text-anchor: middle; }
+.spec .hair { stroke: var(--faint); stroke-width: 1; }
+.spec .msg { fill: var(--muted); font-size: 13px; text-anchor: middle; }
+.tip { position: absolute; top: 6px; pointer-events: none; background: var(--solid); color: var(--text); border: 1px solid var(--border); border-radius: 12px; padding: 8px 12px; font-size: 12px; line-height: 17px; white-space: nowrap; box-shadow: var(--shadow); }
+.tip b { font-weight: 600; }
+.budget { height: 6px; border-radius: var(--r-pill); background: var(--sunk); margin-top: 8px; overflow: hidden; }
+.budget i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: var(--r-pill); }
+.budget.hot i { background: var(--warning); } .budget.over i { background: var(--negative); }
+.cap-bar { display: flex; height: 10px; border-radius: var(--r-pill); overflow: hidden; background: var(--sunk); gap: 2px; margin: 10px 0; }
+.cap-bar i { display: block; height: 100%; }
+.log-time { color: var(--muted); min-width: 64px; }
+.field { width: 100%; height: 44px; border-radius: 11px; border: 1px solid var(--control); background: var(--sunk); padding: 0 12px; color: var(--text); }
+.field:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.save-line { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-top: 10px; align-items: center; }
+.disabled-zone { opacity: .5; }
+.disabled-zone .slider, .disabled-zone .toggle, .disabled-zone button { pointer-events: none; }
+
+/* collapsible cards */
+details.fold > summary { list-style: none; cursor: pointer; margin: -20px; padding: 20px; min-height: 64px; }
+details.fold[open] > summary { margin-bottom: -6px; }
+details.fold > summary::-webkit-details-marker { display: none; }
+details.fold > summary h2::after { content: ""; display: inline-block; width: 7px; height: 7px; margin-left: 10px; vertical-align: 2px; border-right: 1.5px solid var(--faint); border-bottom: 1.5px solid var(--faint); transform: rotate(45deg); transition: transform .2s; }
+details.fold[open] > summary h2::after { transform: rotate(225deg); }
+.fold-body { margin-top: 8px; }
+.fold-grid { display: grid; gap: 8px; grid-template-columns: 1fr; }
+.fold-grid .srow + .srow { margin-top: 0; }
+.log-list { max-height: 392px; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-y: auto; border: 1px solid var(--border); border-radius: var(--r-item); background: var(--raised); }
+.log-list .lh, .log-list .lr { display: grid; grid-template-columns: 72px 1fr auto; gap: 10px; align-items: center; padding: 0 14px; min-height: 44px; }
+.log-list .lh { position: sticky; top: 0; z-index: 1; min-height: 36px; background: var(--solid); color: var(--muted); font-size: 12px; font-weight: 500; border-bottom: 1px solid var(--border); }
+.log-list .lr + .lr { border-top: 1px solid var(--rule); }
+.log-list .lr .val { color: var(--soft); }
+.log-list .ev-bang { color: var(--accent2-ink); }
+.log-list .empty { border: 0; }
+.val.hot { color: var(--accent2-ink); }
+.run-row { display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; align-items: center; }
+.run-row .acts { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.card.inset { background: var(--sunk); box-shadow: none; padding: 16px; }
+.fgrid { display: grid; gap: 10px; grid-template-columns: 1fr; }
+.fl { display: grid; gap: 4px; font-size: 13px; color: var(--muted); }
+.btn-line { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.btn-line .btn { flex: 1; }
+.sub-h { font-size: 13px; color: var(--muted); font-weight: 500; margin: 18px 0 8px; }
+.steps { display: grid; gap: 6px; margin-bottom: 12px; }
+.steps li { font-size: 13px; color: var(--muted); }
+.steps li.now { color: var(--text); font-weight: 500; }
+.steps li.done { color: var(--faint); text-decoration: line-through; }
+.note-box { border: 1px solid var(--border); border-radius: var(--r-item); padding: 12px 14px; background: var(--raised); font-size: 13px; color: var(--soft); margin: 10px 0; }
+.note-box.warn { background: var(--warn-bg); color: var(--warn-ink); border-color: transparent; display: flex; gap: 10px; align-items: flex-start; }
+.il-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+.il-table th, .il-table td { text-align: right; padding: 4px 6px; border-bottom: 1px solid var(--rule); }
+.il-table th:first-child, .il-table td:first-child { text-align: left; }
+.il-table tr.invalid td { color: var(--faint); }
+.table-wrap { max-height: 300px; overflow: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--border); border-radius: var(--r-item); }
+.ilg { height: 220px; }
+.clip-line { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; margin-top: 10px; }
+
+.toast { position: fixed; left: 50%; bottom: calc(var(--tab-h) + 22px + env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 20;
+  display: flex; align-items: center; gap: 14px; background: var(--text); color: var(--ground); border-radius: 12px; padding: 8px 8px 8px 16px; max-width: calc(100vw - 32px); }
+.toast button { background: none; border: 0; color: var(--ground); font-weight: 600; min-height: 44px; padding: 0 12px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.about { grid-column: 1 / -1; text-align: center; color: var(--faint); font-size: 12px; padding: 8px 0 0; }
+.about .ar { font-family: "Sukoon Kufi", "Noto Kufi Arabic", "Geeza Pro", Tahoma, sans-serif; unicode-bidi: isolate; }
+
+/* layouts */
+#p-live { grid-template-areas: "title" "power" "bangs" "levels" "freq" "log" "version"; }
+#p-live .a-log { grid-area: log; }
+.ck-block { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); }
+.ck-head { margin-bottom: 4px; list-style: none; cursor: pointer; min-height: 44px; }
+.ck-head::-webkit-details-marker { display: none; }
+.ck-head::after { content: ""; width: 8px; height: 8px; border-right: 1.5px solid var(--faint); border-bottom: 1.5px solid var(--faint); transform: rotate(45deg); transition: transform .2s; margin: 0 4px 0 10px; flex: none; }
+.ck-block[open] > .ck-head::after { transform: rotate(225deg); }
+.ck-head .chip { margin-left: auto; }
+.ck-block:not([open]) > .ck-head { margin-bottom: 0; }
+.ck-head h3 { font-size: 15px; font-weight: 600; }
+#p-live .page-title { grid-area: title; } #p-live .a-power { grid-area: power; } #p-live .a-version { grid-area: version; }
+#p-live .a-levels { grid-area: levels; } #p-live .a-bangs { grid-area: bangs; } #p-live .a-freq { grid-area: freq; }
+@media (min-width: 760px) {
+  body { padding-bottom: 40px; }
+  nav#tabs { position: fixed; top: calc(env(safe-area-inset-top) + 8px); bottom: auto; left: 50%; right: auto; transform: translateX(-50%); display: flex; gap: 2px; padding: 3px;
+    background: var(--neu-bg); border: 1px solid var(--border); border-radius: var(--r-pill); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  nav#tabs button { height: 36px; padding: 0 16px; border-radius: var(--r-pill); font-size: 14px; display: inline-flex; align-items: center; gap: 7px; }
+  nav#tabs button svg { width: 16px; height: 16px; }
+  .toast { bottom: calc(20px + env(safe-area-inset-bottom)); }
+  .panel { grid-template-columns: 1fr 1fr; }
+  .span2 { grid-column: 1 / -1; }
+  #p-live { grid-template-areas: "title title" "power bangs" "levels levels" "freq freq" "log log" "version version"; }
+  .chart { height: 260px; }
+  .fold-grid { grid-template-columns: 1fr 1fr; }
+  .fgrid { grid-template-columns: 1fr 1fr; } .fgrid .wide { grid-column: 1 / -1; }
+  .card { padding: 22px; }
+  details.fold > summary { margin: -22px; padding: 22px; }
+}
+@media (min-width: 1100px) {
+  #p-live { grid-template-columns: 1fr 1fr; grid-template-areas: "title title" "power bangs" "levels levels" "freq freq" "log log" "version version"; }
+  #p-live .a-levels, #p-live .a-freq { align-self: stretch; }
+  .panel.three { grid-template-columns: repeat(3, 1fr); }
+  .fold-grid { grid-template-columns: 1fr 1fr 1fr; }
+}
+@media (max-width: 420px) {
+  .brand .ar { font-size: 15px; padding-left: 8px; }
+  .brand { gap: 8px; }
+  .big { font-size: 26px; }
+  .page-title p { display: none; }
+}
+@media (pointer: coarse) {
+  .btn { min-height: 44px; }
+  .seg button { min-height: 44px; }
+  .seg.small button { min-height: 40px; }
+  .icon-btn { width: 40px; height: 40px; }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .appbar, nav#tabs { background: var(--solid); } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .appbar, nav#tabs { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--solid); }
+  .badge.pos, .badge.neg, .badge.rec { box-shadow: none; }
+}
+@media (prefers-contrast: more) { :root { --muted: var(--soft); --faint: var(--soft); --border: var(--control); } }
+</style>
+</head>
+<body>
+<header class="appbar" id="topbar">
+  <div class="appbar-in">
+    <div class="brand">
+      <svg viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="9.5" fill="none" stroke="currentColor" stroke-width="3"/></svg>
+      <h1>Sukoon</h1>
+      <span class="ar" lang="ar" dir="rtl" aria-hidden="true">سكون</span>
+    </div>
+    <div class="status-group">
+      <button class="badge rec" id="rec-badge" type="button" hidden aria-label="Recording to storage. Open Tests."><span class="dot neg"></span><span>Recording</span></button>
+      <span class="badge" id="conn" role="status" aria-live="polite"><span class="dot" id="conn-dot"></span><span id="conn-text">Connecting</span></span>
+      <button class="icon-btn" id="theme-btn" type="button" aria-label="Colour mode: automatic" title="Colour mode">
+        <svg data-ico="auto" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 3a7 7 0 0 1 0 14z" fill="currentColor"/></svg>
+        <svg data-ico="light" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 1.8v2.4M10 15.8v2.4M1.8 10h2.4M15.8 10h2.4M4.2 4.2l1.7 1.7M14.1 14.1l1.7 1.7M4.2 15.8l1.7-1.7M14.1 5.9l1.7-1.7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <svg data-ico="dark" viewBox="0 0 20 20" aria-hidden="true"><path d="M16.5 12.2A7 7 0 0 1 7.8 3.5a7 7 0 1 0 8.7 8.7z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+<nav role="tablist" aria-label="Sections" id="tabs">
+  <button role="tab" data-tab="live" aria-selected="true" aria-controls="p-live"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2 10h3l2-5 3 10 2.5-7 1.5 2h4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>Home</button>
+  <button role="tab" data-tab="controls" aria-selected="false" aria-controls="p-controls"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h7m4 0h3M3 14h3m4 0h7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="6" r="2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="8" cy="14" r="2" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>Sound</button>
+  <button role="tab" data-tab="test" aria-selected="false" aria-controls="p-test"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="11" r="6.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M10 7.5V11l2.2 1.6M8 2.5h4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>Tests</button>
+  <button role="tab" data-tab="diagnostics" aria-selected="false" aria-controls="p-diagnostics"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="5" y="5" width="10" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8 2.5V5m4-2.5V5M8 15v2.5m4-2.5v2.5M2.5 8H5m-2.5 4H5m10-4h2.5M15 12h2.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>System</button>
+</nav>
+<div class="wrap">
+<div class="banners">
+  <div class="banner neg" id="b-offline" role="alert" hidden><span class="dot neg"></span><span><b>Can’t reach the Pi</b>Controls are off until it’s back. Values below are the last ones received.</span><span class="chip neg" id="b-offline-time">Saved –</span></div>
+  <div class="banner warn" id="b-error" role="alert" hidden><span class="warn-icon" aria-hidden="true"></span><span id="b-error-text"></span><button class="btn" id="b-error-close" aria-label="Dismiss message">Dismiss</button></div>
+</div>
+
+<main>
+<!-- ======================= HOME ======================= -->
+<section class="panel" id="p-live" role="tabpanel" aria-label="Home">
+  <div class="page-title"><h2>Home</h2><p>Protection, what you are hearing and every transient</p></div>
+  <section class="card a-power" aria-labelledby="h-power">
+    <div class="card-head"><h2 id="h-power">Protection</h2><span class="chips"><span class="chip warn" id="pw-bypass" hidden>Raw mic: no protection</span><span class="chip" id="pw-version" hidden></span></span></div>
+    <div class="power-state">
+      <div><div class="big" role="status" aria-live="polite"><span class="dot" id="pw-dot"></span><span id="pw-state">Connecting</span></div><div class="label" id="pw-sub">Waiting for the Pi</div></div>
+    </div>
+    <button class="btn wide" id="power" disabled aria-describedby="power-hint">Turn on</button>
+    <p class="power-hint" id="power-hint" aria-live="polite" hidden></p>
+    <p class="card-foot" id="pw-card">Sound card: –</p>
+    <details class="ck-block" id="ck-fold" open>
+      <summary class="card-head ck-head"><h3 id="h-check">System check</h3><span class="chip" id="ck-chip">–</span></summary>
+      <div class="rows">
+        <div class="row"><span class="ck" id="c-usb" data-ok="null"></span><span>USB sound card<span class="sub" id="d-usb">Looking for the sound card</span></span><span></span></div>
+        <div class="row"><span class="ck" id="c-mic" data-ok="null"></span><span>Microphone signal<span class="sub" id="d-mic">Not checked yet</span></span><button class="btn" data-check="mic">Check again</button></div>
+        <div class="row"><span class="ck" id="c-phones" data-ok="null"></span><span>Headphones<span class="sub" id="d-phones">Play the test, then confirm you heard it</span></span><button class="btn" data-check="tone">Play test</button></div>
+        <div class="heard" id="heard-row" hidden><button class="btn" data-check="not_heard">I didn’t hear it</button><button class="btn primary" data-check="heard">I heard it</button></div>
+      </div>
+      <p class="card-foot">Sukoon starts by itself at power-up once the card and the microphone pass. The headphone check is optional: this card can’t sense plugs, so it needs you to confirm. Checks run only while Sukoon is off.</p>
+    </details>
+  </section>
+
+  <section class="card a-bangs" aria-labelledby="h-bangs">
+    <div class="card-head"><h2 id="h-bangs">Bangs and alarms</h2><span class="cap" id="bangs-when">This run</span></div>
+    <div class="bangs-body">
+      <div class="stats">
+        <div class="stat"><div class="label">Bangs muted</div><div class="big" id="s-bangs">Waiting</div></div>
+        <div class="stat"><div class="label">Typical reduction</div><div class="big"><span id="s-typ">Waiting</span><span class="unit" id="s-typ-u"></span></div></div>
+      </div>
+      <div class="rows">
+        <div class="row"><span class="dot" id="lb-dot"></span><span>Latest bang<span class="sub" id="lb-sub">None yet</span></span><span class="chip" id="lb-chip" hidden></span></div>
+        <div class="row"><span class="dot" id="al-dot"></span><span>Alarms<span class="sub" id="al-sub">None yet. Alarms are turned down, never removed.</span></span><span class="chip" id="al-chip">0</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card a-levels" aria-labelledby="h-levels">
+    <div class="card-head"><h2 id="h-levels">Levels</h2>
+      <span class="chips"><span class="chip accent2" id="bang-now" hidden><span class="dot o2"></span>Bang turned down</span>
+      <span class="chip" id="speech" aria-live="polite"><span class="dot" id="speech-dot"></span><span id="speech-text">No speech</span></span></span></div>
+    <div class="meters">
+      <div class="meter"><div class="label">In, microphone</div><div class="big"><span id="v-in">Waiting</span><span class="unit" id="u-in" hidden>dBFS</span></div><div class="bar"><i id="b-in" style="background:var(--series-in)"></i></div></div>
+      <div class="meter"><div class="label">Out, earbuds</div><div class="big"><span id="v-out">Waiting</span><span class="unit" id="u-out" hidden>dBFS</span></div><div class="bar"><i id="b-out" style="background:var(--series-out)"></i></div></div>
+    </div>
+    <div class="chart"><canvas id="graph" role="img" aria-label="Input and output level over time"></canvas><div class="empty" id="graph-empty">Connecting to the Pi.</div></div>
+    <div class="legend">
+      <span><i style="background:var(--series-in)"></i>In</span>
+      <span><i style="background:var(--series-out)"></i>Out</span>
+      <span><i class="box" style="background:var(--series-bang-fill);outline:1px solid var(--series-bang)"></i>Bang or alarm turned down</span>
+      <span><i style="background:var(--series-speech);height:4px"></i>Speech</span>
+      <span id="legend-span">dBFS, last 10 s</span>
+    </div>
+    <div class="review" id="review" hidden>
+      <div class="review-head"><span class="label">Last run · <span id="review-label">–</span></span>
+        <span class="seg small" id="review-span" role="group" aria-label="Time shown"><button data-span="10" aria-pressed="true">10 s</button><button data-span="30" aria-pressed="false">30 s</button><button data-span="60" aria-pressed="false">1 min</button><button data-span="all" aria-pressed="false">All</button></span></div>
+      <div class="track"><span class="cap">Older</span><input class="slider" type="range" id="review-pos" min="0" max="1" step="0.1" value="1" aria-label="Scroll through the last run"><span class="cap">Newer</span></div>
+    </div>
+  </section>
+
+  <section class="card a-freq" aria-labelledby="h-freq">
+    <div class="card-head"><h2 id="h-freq">Frequency</h2>
+      <span class="seg small" id="sp-views" role="group" aria-label="Spectrum shown"><button data-spec="live" aria-pressed="true">Live</button><button data-spec="bang" aria-pressed="false">Last bang</button><button data-spec="avg" aria-pressed="false">3 min</button></span></div>
+    <div class="spec"><svg id="sp-chart" role="img" aria-label="Microphone and earbud spectrum"></svg><div class="tip" id="sp-tip" hidden></div></div>
+    <div class="legend">
+      <span><i style="background:var(--series-in)"></i>Microphone</span>
+      <span><i style="background:var(--series-out)"></i>Earbuds</span>
+      <span><i class="box" style="background:var(--series-bang-fill);outline:1px solid var(--series-bang)"></i>Reduced, labels in dB</span>
+      <span id="sp-note">dBFS per 1/3 octave</span>
+    </div>
+    <div class="rows" style="margin-top:12px">
+      <div class="row two"><span>Average attenuation<span class="sub" id="sp-avg-sub">First result after 3 minutes</span></span><span class="big" id="sp-avg">–</span></div>
+      <div class="row two"><span>These 3 minutes so far<span class="sub" id="sp-cur-sub">–</span></span><span class="val" id="sp-cur">–</span></div>
+      <div class="row two"><span>Last bang<span class="sub" id="sp-bang-sub">None yet</span></span><span class="val" id="sp-bang">–</span></div>
+      <div class="row two"><span>All bangs<span class="sub" id="sp-bangs-sub">None yet</span></span><span class="val" id="sp-bangs">–</span></div>
+    </div>
+    <details class="explain" id="sp-hist-wrap" hidden><summary id="sp-hist-sum">Earlier 3-minute windows</summary><div class="rows" id="sp-hist"></div></details>
+    <details class="explain"><summary>Reading these numbers</summary>
+      <p>Percent is how much smaller the sound pressure is at the earbuds than at the microphone: 6 dB is 50%, 20 dB is 90%, 40 dB is 99%.</p>
+      <p>Average attenuation compares all sound in and out over each 3 minutes, so it rises in a loud place and can go below zero in a quiet room where speech is boosted. A bang is measured over its first 80 ms. Sound leaking past the earbud seal is not included.</p>
+    </details>
+  </section>
+
+  <section class="card a-log" aria-labelledby="h-log">
+    <div class="card-head"><h2 id="h-log">Transients log</h2><span class="cap" id="log-count">–</span></div>
+    <div class="log-list" id="log" tabindex="0" role="region" aria-label="Transients, newest first"></div>
+    <p class="card-foot" id="totals">–</p>
+  </section>
+
+  <section class="card a-version" aria-labelledby="h-version">
+    <div class="card-head"><h2 id="h-version">Test version</h2><span class="cap" id="ver-mode">Used at the next start</span></div>
+    <div class="seg" id="versions" role="group" aria-label="Test version" hidden></div>
+    <div class="empty" id="ver-wait">Shown once the Pi answers.</div>
+    <p class="version-note" id="ver-note" hidden></p>
+  </section>
+</section>
+
+<!-- ======================= SOUND ======================= -->
+<section class="panel" id="p-controls" role="tabpanel" aria-label="Sound" hidden>
+  <div class="page-title"><h2>Sound</h2><p>How Sukoon sounds and what it turns down</p></div>
+  <div class="banner warn span2" data-offnote hidden><span class="warn-icon" aria-hidden="true"></span><span>Turn Sukoon on to change these settings. <button class="linkish" data-goto="live">Go to Home</button></span><span></span></div>
+  <section class="card zone" aria-labelledby="h-sound">
+    <div class="card-head"><h2 id="h-sound">Speech and room</h2></div>
+    <div data-slider="TARGET_SPEECH_DBFS"></div>
+    <div class="srow" id="room">
+      <div class="srow-head"><label for="room-slider">Room sound during speech</label><span class="val" id="room-val">–</span></div>
+      <div class="track"><span class="cap">Less</span><input class="slider" type="range" id="room-slider" min="6" max="30" step="1" data-room aria-describedby="room-help"><span class="cap">More</span></div>
+      <p class="help" id="room-help">How much of the room you hear while someone talks.</p>
+    </div>
+  </section>
+  <section class="card zone" aria-labelledby="h-bg">
+    <div class="card-head"><h2 id="h-bg">Bangs</h2><span class="chip warn" id="bg-off" hidden>Off: no bang protection</span></div>
+    <div class="srow">
+      <div class="srow-head"><span class="lab" id="bs-label">Bang sensitivity</span><span class="val" id="bs-val">–</span></div>
+      <div class="seg" id="bang-sens" role="group" aria-labelledby="bs-label"><button data-sens="low" aria-pressed="false">Low</button><button data-sens="normal" aria-pressed="false">Normal</button><button data-sens="high" aria-pressed="false">High</button></div>
+      <p class="help">How easily a sudden sound counts as a bang. High catches softer bangs but can dip sharp speech sounds like t and k.</p>
+    </div>
+    <div data-slider="BANG_DUCK_DB"></div>
+  </section>
+  <section class="card zone" aria-labelledby="h-al">
+    <div class="card-head"><h2 id="h-al">Alarms</h2><span class="cap">Turned down, never removed</span></div>
+    <div data-slider="SUSTAIN_DUCK_DB"></div>
+  </section>
+  <section class="card zone" aria-labelledby="h-eqq">
+    <div class="card-head"><h2 id="h-eqq">Tone</h2></div>
+    <div class="seg" role="group" aria-label="Equalizer presets" data-eqgroup></div>
+    <p class="card-foot">Clearer brings back the crisp high sounds this microphone loses. Flat turns the equalizer off. Fine-tune it under Equalizer below.</p>
+  </section>
+  <section class="card" aria-labelledby="h-mic">
+    <div class="card-head"><h2 id="h-mic">Microphone</h2><span class="cap" id="mic-card">–</span></div>
+    <div class="srow" id="mic-level-box">
+      <div class="srow-head"><label for="mic-level">Mic level</label><span class="val" id="mic-level-val">–</span></div>
+      <div class="track"><span class="cap">50%</span><input class="slider" type="range" id="mic-level" min="50" max="100" step="1" value="80" disabled aria-describedby="mic-level-help"><span class="cap">100%</span></div>
+      <p class="help" id="mic-level-help">How strongly the sound card amplifies the mic. Default 80%. Saved for this card and set again at every start. Works while off too.</p>
+    </div>
+    <div class="rows" style="margin-top:8px">
+      <div class="row two"><span>Clipped samples<span class="sub" id="mic-clip-sub">This session · last 10 s</span></span><span class="val" id="mic-clip">–</span></div>
+    </div>
+    <div class="clip-line"><p class="help">Each one is a sample where the mic hit its limit. 0 in the last 10 s is what you want. Steady counts while people just talk mean the level is too high.</p><button class="btn" id="mic-clip-reset">Reset count</button></div>
+    <details class="explain"><summary>Why mic level matters</summary>
+      <p>Mic level is how strongly the sound card amplifies the microphone. Too high and close claps hit the limit (clipping), which sounds harsh and makes bangs harder to measure. Too low and quiet speech gets lost in noise.</p>
+      <p>The slider runs from 50% (−30 dB) to 100% (0 dB, the card’s maximum). Below 50%, normal speech a metre away drops toward the mic’s own hiss and the speech detector starts missing it. Turning it up can’t damage anything; it only makes clipping start sooner.</p>
+    </details>
+  </section>
+  <section class="card zone" aria-labelledby="h-modes">
+    <div class="card-head"><h2 id="h-modes">Compare</h2></div>
+    <div class="rows" data-toggles="bypass"></div>
+  </section>
+  <section class="card zone a-presets" aria-labelledby="h-presets">
+    <div class="card-head"><h2 id="h-presets">Presets</h2></div>
+    <div class="rows" id="presets"></div>
+    <div class="save-line"><input class="field" id="preset-name" type="text" maxlength="40" placeholder="Preset name" aria-label="New preset name" autocomplete="off"><button class="btn" id="preset-save">Save current</button></div>
+    <p class="card-foot">Tap a preset to apply it. Saving needs Sukoon on.</p>
+  </section>
+  <section class="card zone a-reset" aria-labelledby="h-reset">
+    <div class="card-head"><h2 id="h-reset">Reset</h2></div>
+    <p class="help" style="margin-bottom:12px">Puts every setting back to its default. The test version stays as it is.</p>
+    <button class="btn" id="reset">Reset to defaults</button>
+  </section>
+
+  <div class="group-title">More control</div>
+  <details class="card fold span2">
+    <summary class="card-head"><h2>Equalizer</h2><span class="cap">5 bands</span></summary>
+    <div class="zone fold-body">
+      <div class="seg" role="group" aria-label="Equalizer presets" data-eqgroup style="margin-bottom:12px"></div>
+      <div class="fold-grid">
+        <div data-slider="EQ_100"></div>
+        <div data-slider="EQ_400"></div>
+        <div data-slider="EQ_1000"></div>
+        <div data-slider="EQ_2500"></div>
+        <div data-slider="EQ_5000"></div>
+      </div>
+      <details class="explain"><summary>What the equalizer does</summary>
+        <p>Each slider makes one range of pitches louder or quieter, from deep (bass) to crisp (clarity). 0 dB leaves it as it is.</p>
+        <p>This mic loses the high sounds that make speech crisp, and noise removal takes a little more. Raising presence and clarity brings them back.</p>
+      </details>
+    </div>
+  </details>
+  <details class="card fold span2">
+    <summary class="card-head"><h2>Expert</h2><span class="cap">Raw settings · the defaults suit normal use</span></summary>
+    <div class="zone fold-body">
+      <div class="rows" style="margin-bottom:8px" data-toggles="pop_guard_enabled"></div>
+      <div class="fold-grid">
+        <div data-slider="FLOOR_MIN_DB"></div>
+        <div data-slider="FLOOR_MAX_DB"></div>
+        <div data-slider="POP_JUMP_DB"></div>
+        <div data-slider="BANG_OVER_SPEECH_DB"></div>
+        <div data-slider="POP_HOLD_FRAMES"></div>
+        <div data-slider="SUSTAIN_FADE_S"></div>
+        <div data-slider="SUSTAIN_STEADY_FRAMES"></div>
+      </div>
+      <details class="explain"><summary>How these work together</summary>
+        <p>Sukoon removes background noise, then mixes a little of the plain microphone back in while someone talks, so you still hear the room naturally. The two room settings say how far that room sound sits below speech; Sukoon picks a value between them depending on how noisy it is.</p>
+        <p>When a sudden loud sound arrives, room sound is muted for the mute time. Test 5 also catches bangs while someone is talking: only the bang itself is turned down, usually for 30 to 100 ms, so speech before and after stays clear.</p>
+        <p>Sirens and other long loud sounds are played quieter, never removed. An alarm never plays below −26 dBFS, and a faint alarm is raised by up to 10 dB to reach that level (fixed values).</p>
+      </details>
+    </div>
+  </details>
+</section>
+
+<!-- ======================= TESTS ======================= -->
+<section class="panel" id="p-test" role="tabpanel" aria-label="Tests" hidden>
+  <div class="page-title"><h2>Tests</h2><p>Record, measure and download</p></div>
+  <section class="card" aria-labelledby="h-test">
+    <div class="card-head"><h2 id="h-test">Timed test</h2><span class="chip" id="tt-chip">Ready</span></div>
+    <div id="tt-setup">
+      <div class="label" style="margin-bottom:8px">Length (minutes)</div>
+      <div class="seg" id="tt-min" role="group" aria-label="Test length in minutes">
+        <button data-min="1" aria-pressed="false">1</button><button data-min="2" aria-pressed="true">2</button><button data-min="3" aria-pressed="false">3</button><button data-min="4" aria-pressed="false">4</button><button data-min="5" aria-pressed="false">5</button>
+      </div>
+      <button class="btn wide" id="tt-start" style="margin-top:14px">Start test</button>
+      <p class="power-hint" id="tt-hint"></p>
+    </div>
+    <div id="tt-run" hidden>
+      <div class="power-state"><div><div class="big" id="tt-left">–</div><div class="label" id="tt-sub">–</div></div><span class="chip" id="tt-bangs">0 bangs</span></div>
+      <div class="bar" style="height:8px;margin:0 0 14px"><i id="tt-bar" style="background:var(--accent)"></i></div>
+      <button class="btn wide" id="tt-stop">Stop early</button>
+    </div>
+    <p class="card-foot">Records the microphone and what Sukoon plays, and logs levels per band, output peaks, CPU, temperature, processing time, underflows, clipping, mic level and every bang about once a second. Needs Sukoon on. Latency can’t be measured during a test; the last measured value goes into the summary.</p>
+  </section>
+
+  <section class="card" aria-labelledby="h-tests">
+    <div class="card-head"><h2 id="h-tests">Saved tests</h2><span class="chips"><span class="chip warn" id="tt-low" hidden>Storage low</span><span class="cap" id="tt-free">–</span></span></div>
+    <div class="rows" id="tt-list"><div class="empty">Loading…</div></div>
+    <p class="card-foot">Each download is one zip: both recordings, bands.csv, system.csv, bangs.csv, a summary and a README. Delete takes two taps.</p>
+  </section>
+
+  <section class="card span2" aria-labelledby="h-rec">
+    <div class="card-head"><h2 id="h-rec">Recordings</h2><span class="cap" id="rec-count">–</span></div>
+    <div class="rows" id="rec-list"><div class="empty">Loading…</div></div>
+    <div class="rows" style="margin-top:10px">
+      <div class="row two"><span>Headset playback<span class="sub" id="rec-mode">–</span></span><span class="val" id="rec-now">Nothing playing</span></div>
+      <label class="row two"><span>Keep the live mic on<span class="sub">On: the recording is mixed with the room, like a real sound. Off: Sukoon hears only the recording.</span></span><input type="checkbox" role="switch" class="toggle" id="rec-keep" checked></label>
+      <label class="row two"><span>Recording level<span class="sub">Added to the input before processing</span></span><span class="val"><input type="range" id="rec-gain" min="-30" max="10" step="1" value="0" aria-label="Recording level in dB"> <span id="rec-gain-v">0 dB</span></span></label>
+    </div>
+    <p class="card-foot">The player plays on this phone or laptop. Play on headset: with Sukoon on, the recording goes into Sukoon’s input and you hear it processed in the current test version, so its bangs are handled like real ones (the Bangs and Frequency cards count them). With Sukoon off, it plays as is. Level and mic changes apply from the next Play. To add more, copy 48 kHz WAV files into dashboard/recordings on the Pi.</p>
+  </section>
+
+  <div class="group-title">Long measurements</div>
+  <details class="card fold span2" id="advanced">
+    <summary class="card-head"><h2>Advanced</h2><span class="cap">Battery test · Passive attenuation test</span></summary>
+    <div class="panel fold-body" id="adv-body">
+      <section class="card inset" aria-labelledby="h-bat">
+        <div class="card-head"><h2 id="h-bat">Battery test</h2><span class="chip" id="bt-chip">Ready</span></div>
+        <form id="bt-form" autocomplete="off">
+          <p class="help" style="margin-bottom:12px">Runs on its own until the power bank dies, you stop it, or the time limit. It needs no phone, SSH or network once started, and keeps Sukoon on in the current test version. A row is saved every 10 seconds.</p>
+          <div class="fgrid">
+            <label class="fl">Power bank model or capacity<input class="field" name="bank" required placeholder="e.g. Anker 10000 mAh"></label>
+            <label class="fl">Starting charge (%)<input class="field" name="start_charge_pct" inputmode="decimal" placeholder="100"></label>
+            <label class="fl">USB meter at start (Wh, optional)<input class="field" name="meter_start_wh" inputmode="decimal"></label>
+            <label class="fl">Volume (speech target, dBFS)<input class="field" name="volume" id="bt-volume" readonly></label>
+            <label class="fl">Room temperature (°C)<input class="field" name="room_temp" inputmode="decimal"></label>
+            <label class="fl">Enclosure or mounting<input class="field" name="enclosure" placeholder="e.g. Pi in its case, on the desk"></label>
+            <label class="fl">Ambient conditions<input class="field" name="ambient" placeholder="e.g. quiet room, AC on"></label>
+            <label class="fl">Stimulus file<input class="field" name="stimulus_file" placeholder="file name, played on loop"></label>
+            <label class="fl">Speaker volume<input class="field" name="speaker_volume" placeholder="e.g. laptop 40%"></label>
+            <label class="fl">Level at the mic (phone SPL app)<input class="field" name="spl_at_mic" placeholder="e.g. 62 dBA"></label>
+            <label class="fl">Speaker to mic distance<input class="field" name="distance" placeholder="e.g. 1.5 m"></label>
+            <label class="fl">Stop after (hours, optional)<input class="field" name="max_hours" inputmode="decimal" placeholder="none"></label>
+            <label class="fl wide">Note (optional)<input class="field" name="note"></label>
+          </div>
+          <label class="row two" style="margin-top:10px"><span>Save short clips around bang triggers<span class="sub">About 1 s per bang (0.4 s before, 0.6 s after), at most 200 clips or 50 MB. Switches itself off if it ever slows the audio.</span></span><input type="checkbox" role="switch" class="toggle" name="save_clips" checked></label>
+          <button class="btn wide" id="bt-start" type="submit" style="margin-top:12px">Start battery test</button>
+        </form>
+        <div id="bt-run" hidden>
+          <div class="power-state"><div><div class="big" id="bt-elapsed">–</div><div class="label" id="bt-sub">–</div></div><span class="chip" id="bt-ss">–</span></div>
+          <div class="rows">
+            <div class="row two"><span>Rows logged<span class="sub">One every 10 s, saved at once</span></span><span class="val" id="bt-rows">–</span></div>
+            <div class="row two"><span>Clips saved<span class="sub" id="bt-clips-sub">–</span></span><span class="val" id="bt-clips">–</span></div>
+            <div class="row two"><span>Temperature · power flag</span><span class="val" id="bt-temp">–</span></div>
+          </div>
+          <div class="btn-line"><button class="btn" id="bt-stim">Stimulus started</button><button class="btn" id="bt-stop">Stop test</button></div>
+          <p class="card-foot" id="bt-stim-note">Tap Stimulus started each time you start the stimulus file, so its known bang times can be lined up with the triggers.</p>
+        </div>
+        <h3 class="sub-h">Saved battery runs</h3>
+        <div class="rows" id="bt-list"><div class="empty">Loading…</div></div>
+      </section>
+
+      <section class="card inset" aria-labelledby="h-pas">
+        <div class="card-head"><h2 id="h-pas">Passive attenuation test</h2><span class="chip" id="ps-chip">–</span></div>
+        <div id="ps-body"></div>
+        <h3 class="sub-h">Saved passive runs</h3>
+        <div class="rows" id="ps-list"><div class="empty">Loading…</div></div>
+      </section>
+    </div>
+  </details>
+</section>
+
+<!-- ======================= SYSTEM ======================= -->
+<section class="panel three" id="p-diagnostics" role="tabpanel" aria-label="System" hidden>
+  <div class="page-title"><h2>System</h2><p>Sound card, timing and the Raspberry Pi</p></div>
+
+  <section class="card" aria-labelledby="h-card">
+    <div class="card-head"><h2 id="h-card">Sound card</h2><span class="chip" id="sc-chip">–</span></div>
+    <div class="rows">
+      <div class="row two"><span>Active card<span class="sub" id="sc-why">–</span></span><span class="val" id="sc-name">–</span></div>
+      <div class="row two"><span>USB port<span class="sub" id="sc-port-sub">Where the card is plugged in</span></span><span class="val" id="sc-port">–</span></div>
+      <div class="row two"><span>USB id<span class="sub">Vendor and product, used to recognise the card</span></span><span class="val" id="sc-usb">–</span></div>
+      <div class="row two"><span>Cards detected<span class="sub" id="d-cards">–</span></span><span class="val" id="n-cards">–</span></div>
+      <div class="row two" id="card-pick-row" hidden><span>Card to use<span class="sub">Two cards are plugged in. Saved for next time. Only while off.</span></span><span class="seg small" id="card-pick" role="group" aria-label="Sound card to use"></span></div>
+    </div>
+    <p class="card-foot">Cards are detected once, at power-up. Plug or unplug a card only with the Pi powered off.</p>
+  </section>
+
+  <section class="card" aria-labelledby="h-pi">
+    <div class="card-head"><h2 id="h-pi">Raspberry Pi</h2></div>
+    <div class="rows">
+      <div class="row two"><span>Power supply</span><span class="chip" id="y-power">–</span></div>
+      <div class="row two"><span>CPU load</span><span class="val" id="y-cpu">–</span></div>
+      <div class="row two"><span>Temperature</span><span class="val" id="y-temp">–</span></div>
+      <div class="row two"><span>Clock speed</span><span class="val" id="y-clock">–</span></div>
+      <div class="row two"><span>Uptime</span><span class="val" id="y-uptime">–</span></div>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="h-lat">
+    <div class="card-head"><h2 id="h-lat">Latency</h2></div>
+    <div class="rows">
+      <div class="row two"><span>Measured, mic to ear<span class="sub" id="lat-sub">With Sukoon off, wear the headphones, keep quiet, then tap Measure.</span></span><span class="val" id="lat-measured">Not measured</span></div>
+      <div class="row two"><span>Estimated total</span><span class="val" id="l-total">–</span></div>
+      <div class="row two"><span>Noise removal + frame</span><span class="val" id="l-algo">–</span></div>
+      <div class="row two"><span>Device buffers, reported<span class="sub" id="lat-detail">–</span></span><span class="val" id="l-dev">–</span></div>
+    </div>
+    <button class="btn" data-check="latency" id="lat-measure" style="margin-top:12px">Measure latency</button>
+    <p class="card-foot">Measure plays ten soft sweeps for about 5 seconds and times what leaks back into the mic. Every measurement is saved in logs/latency.log.</p>
+  </section>
+
+  <section class="card" aria-labelledby="h-proc">
+    <div class="card-head"><h2 id="h-proc">Processing</h2><span class="cap">10 ms budget per frame</span></div>
+    <div class="rows">
+      <div class="row two"><span>Time per frame<span class="sub">Average over the last second</span><div class="budget" id="budget"><i></i></div></span><span class="val" id="p-mean">–</span></div>
+      <div class="row two"><span>Slowest frame</span><span class="val" id="p-max">–</span></div>
+      <div class="row two"><span>Frames over budget</span><span class="val" id="p-over">–</span></div>
+      <div class="row two"><span>Output underflows<span class="sub">Each one is a short click</span></span><span class="val" id="p-under">–</span></div>
+      <div class="row two"><span>Input overflows</span><span class="val" id="p-overflow">–</span></div>
+      <div class="row two"><span>Clipped samples<span class="sub">Input at full scale / output clipped</span></span><span class="val" id="p-clip">–</span></div>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="h-att">
+    <div class="card-head"><h2 id="h-att">Attenuation</h2></div>
+    <div class="rows">
+      <div class="row two"><span>Bangs<span class="sub" id="at-bang-sub">None yet</span></span><span class="val" id="at-bang">–</span></div>
+      <div class="row two"><span>Alarms, turned down<span class="sub" id="at-alarm-sub">None yet</span></span><span class="val" id="at-alarm">–</span></div>
+      <div class="row two"><span>Room noise<span class="sub" id="at-amb-sub">While on, outside speech</span></span><span class="val" id="at-amb">–</span></div>
+      <div class="row two"><span>Room noise level</span><span class="val" id="s-noise">–</span></div>
+      <div class="row two"><span>Speech boost</span><span class="val" id="s-gain">–</span></div>
+    </div>
+    <p class="card-foot">How much quieter the earbud signal is than the microphone. Bangs: loudest point in the first 50 ms. Alarms and room noise: average level.</p>
+  </section>
+
+  <section class="card" aria-labelledby="h-st">
+    <div class="card-head"><h2 id="h-st">Storage</h2><span class="cap" id="st-head">–</span></div>
+    <div class="cap-bar" id="st-bar" role="meter" aria-label="SD card space used" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="st-rec" style="background:var(--series-out)"></i><i id="st-sys" style="background:var(--faint)"></i></div>
+    <div class="legend" style="margin:0 0 12px"><span><i class="box" style="background:var(--series-out)"></i><span id="st-l-rec">Recordings –</span></span><span><i class="box" style="background:var(--faint)"></i><span id="st-l-sys">System –</span></span><span><i class="box" style="background:var(--sunk);outline:1px solid var(--border)"></i><span id="st-l-free">Free –</span></span></div>
+    <div class="rows">
+      <div class="row two"><span>Recording time left<span class="sub" id="st-left-sub">–</span></span><span class="val" id="st-left">–</span></div>
+      <div class="row two"><span>Saved recordings<span class="sub">Input and output of each run</span></span><span class="val" id="st-runs">–</span></div>
+      <div class="row two"><span>Memory<span class="sub" id="st-ram-sub">–</span></span><span class="val" id="st-ram">–</span></div>
+    </div>
+  </section>
+
+  <p class="about">Sukoon <span class="ar" lang="ar" dir="rtl">سكون</span> · hear-through hearing protection · version 1.0 · <span id="about-ver">–</span></p>
+</section>
+</main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden><span id="toast-text"></span><button id="toast-undo">Undo</button></div>
+<script>
+'use strict';
+const $ = (id) => document.getElementById(id);
+const FLOOR_DB = -60;
+const pending = {};
+let last = null, history = [], clockOffset = 0, defaults = {}, connected = false, lastGood = 0;
+
+/* ---------- formatting ---------- */
+const fmt = (v, d = 1) => (v === null || v === undefined || Number.isNaN(v)) ? '–' : Number(v).toFixed(d).replace('-', '−');
+const duration = (s) => {
+  s = Math.max(0, Math.round(s)); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), r = s % 60;
+  return h ? `${h} h ${m} min` : m ? `${m} min ${String(r).padStart(2, '0')} s` : `${r} s`;
+};
+const clockTime = (t) => new Date(t * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+const eqLabel = (v) => Number(v) === 0 ? '0 dB' : `${v > 0 ? '+' : '−'}${Math.abs(v).toFixed(0)} dB`;
+
+/* ---------- control definitions (same keys and ranges as server.py RANGES) ---------- */
+const S = {
+  TARGET_SPEECH_DBFS: { label: 'Speech volume', min: -30, max: -15, step: 1, lo: 'Quieter', hi: 'Louder', show: (v) => `${fmt(v, 0)} dBFS`,
+    help: 'How loud speech is in your ears. Default −23 dBFS. It never boosts the room when nobody talks.' },
+  FLOOR_MIN_DB: { label: 'Room sound, quiet places', min: 6, max: 30, step: 1, lo: 'More room', hi: 'Less room', show: (v) => `${fmt(v, 0)} dB below speech`,
+    help: 'How far the room sits below speech in a quiet place. Default 12 dB. Bigger means less room sound.' },
+  FLOOR_MAX_DB: { label: 'Room sound, noisy places', min: 12, max: 40, step: 1, lo: 'More room', hi: 'Less room', show: (v) => `${fmt(v, 0)} dB below speech`,
+    help: 'The same in a noisy place. Default 30 dB. Bigger means less room sound.' },
+  EQ_100: { label: 'Bass, 100 Hz', min: -12, max: 12, step: 1, lo: '−12', hi: '+12', show: eqLabel, help: 'Rumble and depth. Default 0 dB.' },
+  EQ_400: { label: 'Low mids, 400 Hz', min: -12, max: 12, step: 1, lo: '−12', hi: '+12', show: eqLabel, help: 'Warmth. Lower it if voices sound boomy. Default 0 dB.' },
+  EQ_1000: { label: 'Mids, 1 kHz', min: -12, max: 12, step: 1, lo: '−12', hi: '+12', show: eqLabel, help: 'The body of a voice. Default 0 dB.' },
+  EQ_2500: { label: 'Presence, 2.5 kHz', min: -12, max: 12, step: 1, lo: '−12', hi: '+12', show: eqLabel, help: 'Makes words stand out. Default 0 dB.' },
+  EQ_5000: { label: 'Clarity, 5 kHz and up', min: -12, max: 12, step: 1, lo: '−12', hi: '+12', show: eqLabel, help: 'Crisp s and t sounds. Default 0 dB.' },
+  POP_JUMP_DB: { label: 'Bang sensitivity, outside speech', min: 12, max: 30, step: 1, invert: 42, lo: 'Low', hi: 'High', show: (v) => `${fmt(v, 0)} dB jump`,
+    help: 'How sudden a jump must be to count as a bang. Default 20 dB. Higher catches softer bangs but triggers more by mistake.' },
+  POP_HOLD_FRAMES: { label: 'Mute time after a bang', min: 15, max: 60, step: 1, lo: 'Short', hi: 'Long', show: (v) => `${fmt(v * 10, 0)} ms`,
+    help: 'How long room sound stays muted after a bang. Default 330 ms. Longer is safer but cuts more.' },
+  BANG_DUCK_DB: { label: 'How much bangs are turned down', tag: 'Test 5', min: 10, max: 50, step: 1, lo: 'Less', hi: 'More', show: (v) => `${fmt(v, 0)} dB quieter`,
+    help: 'How far a bang that arrives during speech is turned down. Default 30 dB. Outside speech, room sound is muted for a moment instead.' },
+  BANG_OVER_SPEECH_DB: { label: 'Bang sensitivity during speech', tag: 'Test 5', min: 4, max: 20, step: 1, invert: 24, lo: 'Low', hi: 'High', show: (v) => `${fmt(v, 0)} dB over speech`,
+    help: 'Default 15 dB. Higher catches softer bangs but may dip sharp sounds like t and k. Lower it if speech sounds choppy.' },
+  SUSTAIN_DUCK_DB: { label: 'Alarm reduction', tag: 'Tests 3 to 5', min: 6, max: 30, step: 1, lo: 'Less', hi: 'More', show: (v) => `${fmt(v, 0)} dB quieter`,
+    help: 'How much quieter sirens are played. Default 20 dB. They are never removed.' },
+  ALARM_MIN_OUT_DBFS: { label: 'Alarm never below', tag: 'Tests 4 and 5', min: -40, max: -15, step: 1, lo: 'Quieter', hi: 'Louder', show: (v) => `${fmt(v, 0)} dBFS`,
+    help: 'The safety floor. Default −26 dBFS. It wins over alarm reduction.' },
+  ALARM_MAX_BOOST_DB: { label: 'Faint alarm boost', tag: 'Tests 4 and 5', min: 0, max: 20, step: 1, lo: 'None', hi: 'More', show: (v) => `+${fmt(v, 0)} dB`,
+    help: 'The most a faint siren is raised to reach the floor. Default +10 dB.' },
+  SUSTAIN_FADE_S: { label: 'Alarm fade-in', tag: 'Tests 3 to 5', min: 0.5, max: 5, step: 0.5, lo: 'Fast', hi: 'Slow', show: (v) => `${fmt(v, 1)} s`,
+    help: 'How long an alarm takes to rise to its level. Default 2 s.' },
+  SUSTAIN_STEADY_FRAMES: { label: 'Alarm detect time', tag: 'Tests 3 to 5', min: 10, max: 30, step: 1, lo: 'Quick', hi: 'Careful', show: (v) => `${fmt(v * 10, 0)} ms`,
+    help: 'Default 150 ms. Quicker catches sirens sooner but may mistake a held vowel for an alarm.' },
+};
+const T = {
+  bypass: { label: 'Compare: hear the raw mic', help: 'Plays the unprocessed microphone with the same delay, so you can compare. No protection while it is on. Default off.' },
+  recording: { label: 'Recording', help: 'Saves the first 10 minutes of input and output when Sukoon turns off. Default off.' },
+  clip_guard: { label: 'Clipping guard', help: 'Turns sound down 12 dB when the mic overloads. Default off.' },
+  pop_guard_enabled: { label: 'Bang guard', help: 'All bang protection, including Test 5 bangs in speech. Default on.' },
+};
+const EQ_PRESETS = [['Flat', '0,0,0,0,0'], ['Clearer', '0,-2,0,4,8'], ['Extra clear', '-2,-3,0,6,12']];
+
+/* ---------- networking ---------- */
+function showError(text) { $('b-error-text').textContent = text; $('b-error').hidden = false; }
+$('b-error-close').addEventListener('click', () => { $('b-error').hidden = true; });
+async function post(url, body) {
+  try {
+    const r = await fetch(url, body === undefined ? { method: 'POST' } : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    if (!r.ok) { let msg = 'The Pi refused that request.'; try { msg = (await r.json()).error || msg; } catch {} showError(msg); }
+    return r.ok;
+  } catch { showError('That request didn’t reach the Pi.'); return false; }
+}
+async function send(settings) {
+  const now = performance.now();
+  for (const [k, v] of Object.entries(settings)) if (k !== 'reset_defaults') pending[k] = { value: v, until: now + 1500 };
+  try {
+    const r = await fetch('/settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(settings) });
+    if (!r.ok) throw new Error();
+  } catch { for (const k in settings) delete pending[k]; }
+}
+function current(key, fromPacket) {
+  const p = pending[key];
+  if (p && performance.now() < p.until) { if (fromPacket === p.value) delete pending[key]; return p.value; }
+  delete pending[key]; return fromPacket;
+}
+
+/* ---------- toast (undo only) ---------- */
+let toastTimer = null, toastUndo = null;
+function toast(text, undo) {
+  $('toast-text').textContent = text; toastUndo = undo; $('toast').hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => { $('toast').hidden = true; toastUndo = null; }, 6000);
+}
+$('toast-undo').addEventListener('click', () => { if (toastUndo) toastUndo(); toastUndo = null; $('toast').hidden = true; });
+
+/* second tap within 4 s confirms */
+function twoTap(btn, armedText, action) {
+  let armed = 0; const idle = btn.textContent;
+  btn.addEventListener('click', () => {
+    if (performance.now() < armed) { armed = 0; btn.textContent = idle; btn.classList.remove('armed'); action(); return; }
+    armed = performance.now() + 4000; btn.textContent = armedText; btn.classList.add('armed');
+    setTimeout(() => { if (armed && performance.now() >= armed) { armed = 0; btn.textContent = idle; btn.classList.remove('armed'); } }, 4100);
+  });
+}
+
+/* ---------- build sliders and toggles ---------- */
+let uid = 0;
+function guardTouch(input) {
+  // Touch: the slider moves only on a sideways drag, never while the page scrolls, and a tap does nothing.
+  const wrap = input.parentElement;
+  input.style.pointerEvents = 'none';
+  let st = null;
+  const setFromX = (x) => {
+    const r = input.getBoundingClientRect(), min = Number(input.min), max = Number(input.max), step = Number(input.step) || 1;
+    const f = Math.min(1, Math.max(0, (x - r.left - 10) / Math.max(1, r.width - 20)));
+    const v = Math.round((min + f * (max - min)) / step) * step;
+    if (String(v) !== input.value) { input.value = v; input.dispatchEvent(new Event('input', { bubbles: true })); }
+  };
+  wrap.addEventListener('pointerdown', (e) => { if (input.disabled || e.pointerType === 'mouse') return; st = { x: e.clientX, y: e.clientY, id: e.pointerId, drag: false }; });
+  wrap.addEventListener('pointermove', (e) => {
+    if (!st || e.pointerId !== st.id) return;
+    const dx = e.clientX - st.x, dy = e.clientY - st.y;
+    if (!st.drag) {
+      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+      if (Math.abs(dy) >= Math.abs(dx)) { st = null; return; }
+      st.drag = true; try { wrap.setPointerCapture(st.id); } catch {}
+    }
+    setFromX(e.clientX);
+  });
+  const end = () => { if (st && st.drag) input.dispatchEvent(new Event('change', { bubbles: true })); st = null; };
+  wrap.addEventListener('pointerup', end); wrap.addEventListener('pointercancel', () => { st = null; });
+  wrap.addEventListener('pointerdown', (e) => { if (e.pointerType === 'mouse') input.style.pointerEvents = ''; });
+}
+const coarse = matchMedia('(pointer: coarse)').matches;
+document.querySelectorAll('[data-slider]').forEach((slot) => {
+  const key = slot.dataset.slider, d = S[key], id = `s-${key}-${uid++}`;
+  const row = document.createElement('div'); row.className = 'srow';
+  row.innerHTML = `<div class="srow-head"><label for="${id}"></label><span class="val o-${key}">–</span></div>
+    <div class="track"><span class="cap"></span><input class="slider" type="range" id="${id}" min="${d.min}" max="${d.max}" step="${d.step}" data-key="${key}"${d.invert ? ` data-invert="${d.invert}"` : ''} aria-describedby="${id}-h"><span class="cap"></span></div>
+    <p class="help" id="${id}-h"></p>`;
+  const lab = row.querySelector('label'); lab.textContent = d.label;
+  
+  const caps = row.querySelectorAll('.track .cap'); caps[0].textContent = d.lo; caps[1].textContent = d.hi;
+  const help = row.querySelector('.help'); help.textContent = d.help;
+  if (d.tag) { const c = document.createElement('span'); c.className = 'chip'; c.textContent = d.tag; c.style.margin = '0 6px 0 0'; help.prepend(c); }
+  slot.replaceWith(row);
+});
+document.querySelectorAll('[data-toggles]').forEach((box) => {
+  for (const key of box.dataset.toggles.split(' ')) {
+    const d = T[key], id = `t-${key}-${uid++}`;
+    const row = document.createElement('label'); row.className = 'row'; row.htmlFor = id;
+    row.className = 'row two'; row.innerHTML = `<span><span class="t-label"></span><span class="sub"></span></span><input type="checkbox" role="switch" class="toggle" id="${id}" data-key="${key}">`;
+    row.querySelector('.t-label').textContent = d.label; row.querySelector('.sub').textContent = d.help;
+    if (key === 'bypass') { const c = document.createElement('span'); c.className = 'chip warn'; c.textContent = 'On'; c.dataset.bypassChip = ''; c.hidden = true; c.style.marginLeft = '8px'; row.querySelector('.t-label').after(c); }
+    box.append(row);
+  }
+});
+document.querySelectorAll('[data-eqgroup]').forEach((g) => {
+  for (const [name, v] of EQ_PRESETS) { const b = document.createElement('button'); b.textContent = name; b.dataset.eq = v; b.setAttribute('aria-pressed', 'false'); g.append(b); }
+});
+
+/* ---------- wire settings ---------- */
+document.querySelectorAll('.toggle[data-key]').forEach((el) => el.addEventListener('change', () => {
+  if (el.dataset.key === 'pop_guard_enabled' && !el.checked) {
+    // turning bang protection off needs a second tap
+    if (!(el._armed > performance.now())) {
+      el.checked = true; el._armed = performance.now() + 4000;
+      showError('Bang guard off removes all bang protection. Tap the switch again within 4 seconds to turn it off.');
+      return;
+    }
+    el._armed = 0; $('b-error').hidden = true;
+  }
+  send({ [el.dataset.key]: el.checked });
+}));
+document.querySelectorAll('.slider[data-key]').forEach((el) => {
+  let timer = null;
+  const key = el.dataset.key;
+  const value = () => el.dataset.invert ? Number(el.dataset.invert) - Number(el.value) : Number(el.value);
+  el.paint = () => { const t = S[key].show(value()); document.querySelectorAll('.o-' + key).forEach((o) => { o.textContent = t; }); el.setAttribute('aria-valuetext', t); };
+  el.addEventListener('input', () => {
+    el.paint(); pending[key] = { value: value(), until: performance.now() + 1500 };
+    if (!timer) timer = setTimeout(() => { timer = null; send({ [key]: value() }); }, 150);
+  });
+  el.addEventListener('change', () => send({ [key]: value() }));
+  if (coarse) guardTouch(el);
+});
+/* merged room slider: moves FLOOR_MIN_DB and keeps the gap to FLOOR_MAX_DB (both inside their ranges) */
+(() => {
+  const el = $('room-slider'); let timer = null, gap = null;
+  const pair = () => {
+    const s = last && last.packet ? last.packet.settings : {};
+    if (gap === null) gap = (s.FLOOR_MAX_DB ?? 30) - (s.FLOOR_MIN_DB ?? 12);
+    const min = 36 - Number(el.value);                 // slider runs Less (left) to More room (right)
+    const max = Math.min(40, Math.max(12, min + gap));
+    return { FLOOR_MIN_DB: min, FLOOR_MAX_DB: Math.max(max, min) };
+  };
+  el.paint = (p) => { $('room-val').textContent = `${fmt(p.FLOOR_MIN_DB, 0)} to ${fmt(p.FLOOR_MAX_DB, 0)} dB below speech`; };
+  el.addEventListener('input', () => {
+    const p = pair(); el.paint(p); const now = performance.now();
+    pending.FLOOR_MIN_DB = { value: p.FLOOR_MIN_DB, until: now + 1500 }; pending.FLOOR_MAX_DB = { value: p.FLOOR_MAX_DB, until: now + 1500 };
+    if (!timer) timer = setTimeout(() => { timer = null; send(pair()); }, 150);
+  });
+  el.addEventListener('change', () => { send(pair()); gap = null; });
+  if (coarse) guardTouch(el);
+})();
+const BANG_SENS = { low: { POP_JUMP_DB: 26, BANG_OVER_SPEECH_DB: 18 }, normal: { POP_JUMP_DB: 20, BANG_OVER_SPEECH_DB: 15 }, high: { POP_JUMP_DB: 15, BANG_OVER_SPEECH_DB: 10 } };
+document.querySelectorAll('#bang-sens button').forEach((b) => b.addEventListener('click', () => {
+  const v = BANG_SENS[b.dataset.sens], now = performance.now();
+  for (const k in v) pending[k] = { value: v[k], until: now + 1500 };
+  send(v);
+}));
+function renderBangSens(s) {
+  let match = null;
+  for (const [name, v] of Object.entries(BANG_SENS)) if (current('POP_JUMP_DB', s.POP_JUMP_DB) === v.POP_JUMP_DB && current('BANG_OVER_SPEECH_DB', s.BANG_OVER_SPEECH_DB) === v.BANG_OVER_SPEECH_DB) match = name;
+  document.querySelectorAll('#bang-sens button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.sens === match)));
+  $('bs-val').textContent = match ? { low: 'Low', normal: 'Normal (default)', high: 'High' }[match] : 'Custom (set under Expert)';
+}
+document.querySelectorAll('[data-eq]').forEach((b) => b.addEventListener('click', () => {
+  const v = b.dataset.eq.split(',').map(Number);
+  send({ EQ_100: v[0], EQ_400: v[1], EQ_1000: v[2], EQ_2500: v[3], EQ_5000: v[4] });
+}));
+$('power').addEventListener('click', () => {
+  const on = !(last && last.control && last.control.power === 'on');
+  $('power').disabled = true;
+  post('/power', { on });
+});
+document.querySelectorAll('[data-check]').forEach((el) => el.addEventListener('click', () => {
+  el.disabled = true; post('/check/' + el.dataset.check);
+}));
+twoTap($('reset'), 'Tap again to reset', () => {
+  const p = last && last.packet;
+  const before = p ? { ...p.settings, bypass: p.state.bypass, clip_guard: p.state.clip_guard, recording: p.state.recording, pop_guard_enabled: p.state.pop_guard_enabled } : null;
+  send({ reset_defaults: true });
+  if (before) toast('Settings reset to defaults', () => send(before));
+});
+
+/* ---------- tabs ---------- */
+let tab = 'live';
+function showTab(name) {
+  tab = name;
+  document.querySelectorAll('#tabs button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === name)));
+  document.querySelectorAll('main > .panel').forEach((p) => { p.hidden = p.id !== 'p-' + name; });
+  try { localStorage.setItem('ss-tab', name); } catch {}
+  if (name === 'live') drawSpectrum();
+  if (name === 'live') loadEvents(true);
+  if (name === 'test') { loadTests(true); loadBattery(true); loadPassive(); }
+}
+document.querySelectorAll('#tabs button').forEach((b) => b.addEventListener('click', () => { showTab(b.dataset.tab); b.scrollIntoView({ inline: 'nearest', block: 'nearest' }); }));
+$('rec-badge').addEventListener('click', () => { showTab('test'); scrollTo(0, 0); });
+document.querySelectorAll('[data-goto]').forEach((b) => b.addEventListener('click', () => { showTab(b.dataset.goto); scrollTo(0, 0); }));
+
+/* ---------- power, checks ---------- */
+let ckFoldPower = null;
+function renderPower(d) {
+  const c = d.control || {}, p = d.packet, running = d.status === 'Running' || d.status === 'Bypassed';
+  const st = !connected ? (last ? null : 'Connecting') : null;
+  const btn = $('power'), busy = c.power === 'starting' || c.power === 'stopping';
+  let state = { starting: 'Starting', stopping: 'Turning off', on: 'On', off: 'Off' }[c.power] || 'Off';
+  if (st) state = st;
+  $('pw-state').textContent = state;
+  if (connected && c.power && (c.power === 'on' || c.power === 'off') && c.power !== ckFoldPower) {
+    $('ck-fold').open = c.power === 'off';          // folded while protecting, open when off (checks run then)
+    ckFoldPower = c.power;
+  }
+  $('pw-dot').className = 'dot ' + (st || !connected ? '' : busy ? 'warn' : c.power === 'on' ? 'pos' : '');
+  $('pw-bypass').hidden = !(p && p.state && p.state.bypass);
+  $('pw-version').hidden = c.test_version == null; $('pw-version').textContent = `Test ${c.test_version}`;
+  $('pw-sub').textContent = st ? 'Waiting for the Pi' : !connected ? 'Last known state' : running ? `Running for ${duration(d.run_seconds)}` : busy ? (c.message || '') : 'Not processing sound';
+  btn.textContent = { starting: 'Starting…', stopping: 'Turning off…', on: 'Turn off' }[c.power] || 'Turn on';
+  btn.disabled = !connected || busy || (c.power === 'off' && !c.can_start);
+  btn.classList.toggle('primary', c.power === 'off' && !!c.can_start && connected);
+  let hint = c.message || (c.power === 'on' ? '' : c.can_start ? 'Ready.' : !c.usb.ok ? 'No sound card found. See System check below.' : 'Waiting for the microphone check. See System check below.');
+  if (!connected) hint = last ? 'Not connected.' : '';
+  $('power-hint').textContent = hint; $('power-hint').hidden = !hint;
+  if (c.power === 'off' && c.message && /did not start|stopped/.test(c.message)) showError(c.message);
+}
+const ICON_OK = '<svg viewBox="0 0 12 12" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m2.5 6.3 2.2 2.2L9.5 3.6"/></svg>';
+const ICON_NO = '<svg viewBox="0 0 12 12" aria-hidden="true"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="m3.5 3.5 5 5m0-5-5 5"/></svg>';
+function renderChecks(c) {
+  const mark = (id, check) => {
+    const el = $(id), ok = check.detail === 'Checking…' ? 'busy' : String(check.ok);
+    if (el.dataset.ok === ok) return; el.dataset.ok = ok;
+    el.innerHTML = ok === 'true' ? ICON_OK : ok === 'false' ? ICON_NO : ok === 'busy' ? '…' : '';
+    el.setAttribute('aria-label', ok === 'true' ? 'Passed' : ok === 'false' ? 'Failed' : ok === 'busy' ? 'Checking' : 'Not checked');
+  };
+  mark('c-usb', c.usb); $('d-usb').textContent = c.usb.detail + (c.card_missing ? ' Card missing: the audio was stopped.' : '');
+  renderCardPick(c);
+  mark('c-mic', c.mic); $('d-mic').textContent = c.mic.detail;
+  mark('c-phones', c.headphones); $('d-phones').textContent = c.headphones.detail;
+  const idle = connected && c.power === 'off' && !c.busy && c.usb.ok;
+  document.querySelectorAll('[data-check]').forEach((el) => { el.disabled = !idle; });
+  $('heard-row').hidden = !(c.headphones.tone_played && c.headphones.ok === null);
+  const chip = $('ck-chip');
+  chip.textContent = c.ready ? 'All passed' : c.power === 'on' ? 'Running' : c.can_start ? 'Ready' : 'Not ready';
+  chip.className = 'chip' + (c.ready || c.can_start || c.power === 'on' ? '' : ' warn');
+}
+
+function portText(port) {
+  if (!port) return '–';
+  const m = /^(\d+)-([\d.]+)$/.exec(port); if (!m) return port;
+  const hops = m[2].split('.');
+  return hops.length > 1 ? `${port} (bus ${m[1]}, hub port ${hops[hops.length - 1]})` : `${port} (bus ${m[1]}, port ${hops[0]})`;
+}
+function renderCard(c) {
+  const k = c.card, chip = $('sc-chip');
+  chip.textContent = c.card_missing ? 'Missing' : k ? (c.power === 'on' ? 'In use' : 'Ready') : 'Not found';
+  chip.className = 'chip' + (k && !c.card_missing ? '' : ' warn');
+  $('sc-name').textContent = k ? k.label : '–';
+  $('sc-why').textContent = k ? (c.card_reason || '–') : (c.usb && c.usb.detail) || '–';
+  $('sc-port').textContent = k ? portText(k.port) : '–';
+  $('sc-port-sub').textContent = k && k.device ? `Addressed as ${k.device} for this power-up only` : 'Where the card is plugged in';
+  $('sc-usb').textContent = k ? k.usbid : '–';
+}
+let cardPickKey = '';
+function renderCardPick(c) {
+  const cards = c.cards || [], active = c.card ? c.card.usbid : null;
+  $('n-cards').textContent = String(cards.length);
+  $('d-cards').textContent = cards.length ? cards.map((k) => `${k.label} (USB ${k.usbid}${k.port ? ', port ' + k.port : ''})${k.usbid === active ? ', active' : ''}`).join(' · ') : 'None';
+  $('card-pick-row').hidden = cards.length < 2;
+  const key = JSON.stringify([cards, active, c.power, connected]); if (key === cardPickKey) return; cardPickKey = key;
+  const box = $('card-pick'); box.textContent = '';
+  for (const k of cards) {
+    const b = document.createElement('button'); b.textContent = k.label; b.setAttribute('aria-pressed', String(k.usbid === active));
+    b.disabled = !connected || c.power !== 'off';
+    b.addEventListener('click', () => { post('/card', { usbid: k.usbid }); });
+    box.append(b);
+  }
+}
+
+/* ---------- latency ---------- */
+let latPending = null, lastLatKey = '';
+function renderLatency(d) {
+  const c = d.control || {}, modes = d.latency_modes || [];
+  let mode = c.latency_mode;
+  if (latPending && performance.now() < latPending.until) mode = latPending.id; else latPending = null;
+  const key = JSON.stringify([modes, mode, connected]);
+  if (key !== lastLatKey) {
+    lastLatKey = key;
+    const cur = modes.find((m) => m.id === mode);
+    $('lat-detail').textContent = cur ? `${cur.name} buffer${cur.id === 'low' ? ' (not recommended)' : ''}` : '–';
+  }
+  const r = c.latency_result;
+  if (c.measuring) $('lat-measured').textContent = 'Measuring';
+  else if (r && r.ok) {
+    $('lat-measured').textContent = `${fmt(r.mic_to_ear_ms, 0)} ms`;
+    $('lat-sub').textContent = `${(modes.find((m) => m.id === r.mode) || {}).name || r.mode} buffers · varied ${r.range_ms ? `${fmt(r.range_ms[0], 0)} to ${fmt(r.range_ms[1], 0)} ms` : '–'} · includes 20 ms noise removal · ${clockTime(r.time)}`;
+  } else if (r) { $('lat-measured').textContent = 'Not heard'; $('lat-sub').textContent = r.detail; }
+}
+
+/* ---------- test versions ---------- */
+let versionPending = null, lastVersionKey = '';
+function renderVersions(list, selected, runningVersion) {
+  if (versionPending && performance.now() < versionPending.until) selected = versionPending.id; else versionPending = null;
+  const key = JSON.stringify([list, selected, runningVersion, connected]); if (key === lastVersionKey) return; lastVersionKey = key;
+  const box = $('versions'); box.textContent = ''; box.hidden = false; $('ver-wait').hidden = true; $('ver-note').hidden = false;
+  for (const v of list || []) {
+    const b = document.createElement('button'); b.textContent = String(v.id); b.disabled = !connected;
+    b.setAttribute('aria-pressed', String(v.id === selected)); b.setAttribute('aria-label', v.name + (runningVersion === v.id ? ', running' : ''));
+    b.addEventListener('click', () => {
+      versionPending = { id: v.id, until: performance.now() + 1500 }; lastVersionKey = '';
+      post('/test_version', { version: v.id });
+      if (last) renderVersions(last.test_versions, v.id, runningVersion);
+    });
+    box.append(b);
+  }
+  const cur = (list || []).find((v) => v.id === selected);
+  $('ver-note').textContent = cur ? `${cur.name}${cur.id === 5 ? ' (recommended)' : ''}. ${cur.summary}` : '–';
+  $('ver-mode').textContent = runningVersion != null ? 'Switches live' : 'Used at the next start';
+}
+
+/* ---------- presets ---------- */
+async function loadPresets() {
+  let presets = {};
+  try { presets = await (await fetch('/presets')).json(); } catch {}
+  const box = $('presets'); box.textContent = '';
+  if (!Object.keys(presets).length) { const e = document.createElement('div'); e.className = 'empty'; e.textContent = 'No presets yet.'; box.append(e); }
+  for (const [name, values] of Object.entries(presets)) {
+    const row = document.createElement('div'); row.className = 'row two';
+    const apply = document.createElement('button'); apply.className = 'linkish'; apply.style.textDecoration = 'none'; apply.style.textAlign = 'left';
+    apply.textContent = name; apply.setAttribute('aria-label', `Apply preset ${name}`); apply.dataset.needsOn = '';
+    apply.addEventListener('click', () => send(values));
+    const del = document.createElement('button'); del.className = 'btn'; del.textContent = 'Delete'; del.setAttribute('aria-label', `Delete preset ${name}`);
+    twoTap(del, 'Tap to delete', async () => {
+      await fetch('/presets/' + encodeURIComponent(name), { method: 'DELETE' }); loadPresets();
+      toast(`Deleted “${name}”`, async () => {
+        await fetch('/presets', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, settings: values }) }); loadPresets();
+      });
+    });
+    row.append(apply, del); box.append(row);
+  }
+  setControlsEnabled(isRunning());
+}
+$('preset-save').addEventListener('click', async () => {
+  if (!last || !last.packet) return;
+  const name = $('preset-name').value.trim(); if (!name) { $('preset-name').focus(); return; }
+  const p = last.packet, settings = { ...p.settings, clip_guard: p.state.clip_guard, pop_guard_enabled: p.state.pop_guard_enabled };
+  await fetch('/presets', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, settings }) });
+  $('preset-name').value = ''; loadPresets();
+});
+
+/* ---------- mic level (server sets it with amixer; same /settings flow, key mic_level) ---------- */
+let micPending = null;
+(() => {
+  const el = $('mic-level'); let timer = null;
+  const paint = (v, db) => { $('mic-level-val').textContent = `${v}%` + (db != null ? ` · ${db.toFixed(1).replace('-', '−')} dB` : ''); };
+  el.paintMic = paint;
+  el.addEventListener('input', () => {
+    paint(Number(el.value)); micPending = { value: Number(el.value), until: performance.now() + 2000 };
+    if (!timer) timer = setTimeout(() => { timer = null; post('/settings', { mic_level: Number(el.value) }); }, 200);
+  });
+  el.addEventListener('change', () => { micPending = { value: Number(el.value), until: performance.now() + 2000 }; post('/settings', { mic_level: Number(el.value) }); });
+  if (coarse) guardTouch(el);
+})();
+$('mic-clip-reset').addEventListener('click', () => post('/mic_clips/reset'));
+function renderMic(m, running) {
+  const el = $('mic-level');
+  if (!m) { el.disabled = true; $('mic-level-val').textContent = '–'; $('mic-card').textContent = '–'; return; }
+  el.min = m.min; el.max = m.max;
+  el.disabled = !connected || m.pct == null;
+  $('mic-card').textContent = m.label || 'No card';
+  if (micPending && performance.now() < micPending.until) { if (micPending.value === m.pct) micPending = null; }
+  else { micPending = null; if (m.pct != null) { el.value = m.pct; el.paintMic(m.pct, m.db); } else $('mic-level-val').textContent = m.error || '–'; }
+  const show = (v) => v == null ? '–' : String(v);
+  $('mic-clip').textContent = m.clips_session == null ? (running ? '–' : 'Shown while on') : `${show(m.clips_session)} · ${show(m.clips_10s)}`;
+  $('mic-clip').classList.toggle('hot', (m.clips_10s || 0) > 0);
+  $('mic-clip-reset').disabled = !connected || m.clips_session == null;
+}
+
+/* ---------- timed test ---------- */
+let ttMinutes = 2, ttListKey = '', ttListAt = 0;
+document.querySelectorAll('#tt-min button').forEach((b) => b.addEventListener('click', () => {
+  ttMinutes = Number(b.dataset.min);
+  document.querySelectorAll('#tt-min button').forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+}));
+$('tt-start').addEventListener('click', async () => {
+  if (!isRunning()) { showError('Sukoon is off. Turn it on in Live first: the test records the current test version while it runs.'); return; }
+  $('tt-start').disabled = true; $('tt-hint').textContent = 'Starting…';
+  if (await post('/test/start', { minutes: ttMinutes })) loadTests(true); else $('tt-hint').textContent = '';
+  $('tt-start').disabled = false;
+});
+twoTap($('tt-stop'), 'Tap again to stop', () => post('/test/stop'));
+async function loadRecordings() {
+  let j; try { j = await (await fetch('/recordings')).json(); } catch { return; }
+  const box = $('rec-list'); box.textContent = ''; const list = j.recordings || [];
+  $('rec-count').textContent = `${list.length} ${list.length === 1 ? 'file' : 'files'}`;
+  if (!list.length) { const e = document.createElement('div'); e.className = 'empty'; e.textContent = 'No recordings yet.'; box.append(e); return; }
+  for (const r of list) {
+    const row = document.createElement('div'); row.className = 'row'; row.style.display = 'block';
+    const t = document.createElement('span'); t.textContent = r.name.replace(/\.wav$/i, '').replace(/_/g, ' ');
+    const sub = document.createElement('span'); sub.className = 'sub'; sub.textContent = [r.seconds != null ? duration(r.seconds) : '', bytes(r.bytes)].filter(Boolean).join(' · '); t.append(sub);
+    const a = document.createElement('audio'); a.controls = true; a.preload = 'metadata'; a.src = `/recordings/${encodeURIComponent(r.name)}`;
+    a.style.cssText = 'display:block;width:100%;margin-top:8px';
+    a.addEventListener('play', () => document.querySelectorAll('#rec-list audio').forEach(o => { if (o !== a) o.pause(); }));
+    const pb = document.createElement('button'); pb.className = 'btn'; pb.dataset.rec = r.name; pb.textContent = 'Play on headset';
+    pb.addEventListener('click', () => recHeadset(r.name));
+    const dl = document.createElement('a'); dl.className = 'btn'; dl.href = a.src; dl.setAttribute('download', r.name); dl.textContent = 'Download';
+    const line = document.createElement('div'); line.className = 'btn-line'; line.style.marginTop = '8px'; line.append(pb, dl);
+    row.append(t, a, line); box.append(row);
+  }
+  recMark(j.playing);
+}
+function recMark(p) {
+  const playing = p ? p.name : null;
+  $('rec-now').textContent = !p ? 'Nothing playing' : p.via === 'sukoon'
+    ? `${p.name.replace(/\.wav$/i, '').replace(/_/g, ' ')} · ${duration(p.pos_s)} / ${duration(p.len_s)}`
+    : `${p.name.replace(/\.wav$/i, '').replace(/_/g, ' ')} · as is`;
+  $('rec-mode').textContent = p ? (p.via === 'sukoon' ? `Through Sukoon${p.keep_mic ? ', mixed with the live mic' : ', mic replaced'}, ${p.gain_db >= 0 ? '+' : ''}${p.gain_db} dB` : 'Sukoon off: unprocessed')
+    : 'Sukoon on: processed · Sukoon off: as is';
+  document.querySelectorAll('#rec-list button[data-rec]').forEach(b => {
+    const on = b.dataset.rec === playing; b.textContent = on ? 'Stop headset' : 'Play on headset'; b.setAttribute('aria-pressed', on);
+  });
+  clearTimeout(recPoll); recPoll = setTimeout(recRefresh, playing || recWait > 0 ? 1000 : 5000); if (recWait > 0) recWait--;
+}
+let recPoll = 0, recWait = 0;
+$('rec-gain').addEventListener('input', e => { $('rec-gain-v').textContent = `${+e.target.value > 0 ? '+' : ''}${e.target.value} dB`; });
+async function recRefresh() { try { recMark((await (await fetch('/recordings')).json()).playing); } catch {} }
+async function recHeadset(name) {
+  const b = document.querySelector(`#rec-list button[data-rec="${CSS.escape(name)}"]`);
+  const stop = b && b.getAttribute('aria-pressed') === 'true';
+  document.querySelectorAll('#rec-list audio').forEach(o => o.pause());
+  try {
+    const x = await fetch(stop ? '/recordings/stop' : `/recordings/${encodeURIComponent(name)}/play`, { method: 'POST',
+      headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ gain_db: +$('rec-gain').value, keep_mic: $('rec-keep').checked }) });
+    if (!x.ok) showError((await x.json()).error || 'Could not play on the headset.');
+  } catch { showError('That request didn’t reach the Pi.'); }
+  recWait = 3; setTimeout(recRefresh, 400);
+}
+loadRecordings();
+async function loadTests(force) {
+  if (!force && performance.now() - ttListAt < 4000) return; ttListAt = performance.now();
+  let j; try { j = await (await fetch('/tests')).json(); } catch { return; }
+  $('tt-low').hidden = !j.low_storage; $('tt-free').textContent = j.disk_free ? `${bytes(j.disk_free)} free` : '–';
+  const key = JSON.stringify(j.runs); if (key === ttListKey) return; ttListKey = key;
+  const box = $('tt-list'); box.textContent = '';
+  if (!j.runs || !j.runs.length) { const e = document.createElement('div'); e.className = 'empty'; e.textContent = 'No tests yet.'; box.append(e); return; }
+  for (const r of j.runs) box.append(runRow(r, `/tests/${r.id}`, timedLabel(r)));
+}
+function stampText(id) { return `${id.slice(0, 4)}-${id.slice(4, 6)}-${id.slice(6, 8)} ${id.slice(9, 11)}:${id.slice(11, 13)}`; }
+function timedLabel(r) {
+  const s = r.summary || {}, dur = s.duration_recorded_s;
+  const bits = [dur != null ? duration(dur) : (r.state === 'running' ? 'running' : 'unfinished'), s.test_version ? `Test ${s.test_version}` : '',
+    s.bangs != null ? `${s.bangs} ${s.bangs === 1 ? 'bang' : 'bangs'}` : '', s.output_sample_peak_max_dbfs != null ? `peak ${fmt(s.output_sample_peak_max_dbfs, 1)} dBFS` : '',
+    s.error ? s.error : ''];
+  return bits.filter(Boolean).join(' · ');
+}
+function runRow(r, base, label, reload) {
+  const row = document.createElement('div'); row.className = 'row run-row';
+  const t = document.createElement('span'); t.textContent = stampText(r.id);
+  const sub = document.createElement('span'); sub.className = 'sub'; sub.textContent = `${label} · ${bytes(r.bytes)}`; t.append(sub);
+  const acts = document.createElement('span'); acts.className = 'acts';
+  if (r.zip) { const a = document.createElement('a'); a.className = 'btn'; a.href = `${base}/download`; a.setAttribute('download', ''); a.textContent = 'Download'; acts.append(a); }
+  const del = document.createElement('button'); del.className = 'btn'; del.textContent = 'Delete'; del.setAttribute('aria-label', `Delete ${stampText(r.id)}`);
+  twoTap(del, 'Tap to delete', async () => {
+    try { const x = await fetch(base, { method: 'DELETE' }); if (!x.ok) showError((await x.json()).error || 'Could not delete.'); } catch { showError('That request didn’t reach the Pi.'); }
+    (reload || loadTests)(true);
+  });
+  acts.append(del); row.append(t, acts); return row;
+}
+let ttLastState = '';
+function renderTimed(t) {
+  const running = !!(t && t.running);
+  $('tt-setup').hidden = running; $('tt-run').hidden = !running;
+  const on = isRunning();
+  $('tt-start').disabled = !connected; $('tt-start').classList.toggle('primary', on);
+  if (!running) $('tt-hint').textContent = !connected ? '' : on ? `Records ${ttMinutes} min of Test ${last.control.test_version}, then stops by itself.` : 'Sukoon is off. Turn it on in Live to start a test.';
+  const chip = $('tt-chip');
+  if (running) {
+    const total = t.total_s || 0, el = t.elapsed_s || 0;
+    $('tt-left').textContent = `${minSec(Math.max(0, total - el))} left`;
+    $('tt-sub').textContent = `${minSec(el)} of ${minSec(total)} recorded` + (t.out_peak_dbfs != null ? ` · output peak ${fmt(t.out_peak_dbfs, 1)} dBFS` : '');
+    $('tt-bar').style.width = `${total ? 100 * el / total : 0}%`;
+    $('tt-bangs').textContent = `${t.bangs || 0} ${t.bangs === 1 ? 'bang' : 'bangs'}`;
+    chip.textContent = t.state === 'finishing' ? 'Saving' : 'Recording'; chip.className = 'chip neg';
+  } else if (t && t.state === 'done') { chip.textContent = 'Finished'; chip.className = 'chip'; }
+  else if (t && t.state === 'error') { chip.textContent = 'Error'; chip.className = 'chip warn'; if (t.error) $('tt-hint').textContent = t.error; }
+  else if (t && t.state === 'finishing') { chip.textContent = 'Saving'; chip.className = 'chip'; }
+  else { chip.textContent = 'Ready'; chip.className = 'chip'; }
+  const key = t ? `${t.id}|${t.state}` : '';
+  if (key !== ttLastState) { ttLastState = key; loadTests(true); }
+  if (tab === 'test') loadTests();
+}
+
+/* ---------- battery test ---------- */
+let btListAt = 0, btListKey = '', btLastId = null;
+$('bt-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const f = new FormData($('bt-form')), body = {};
+  for (const [k, v] of f.entries()) body[k] = v;
+  body.save_clips = $('bt-form').elements.save_clips.checked;
+  body.phone_time_ms = Date.now();                 // the Pi has no clock: keep the phone's time with the log
+  $('bt-start').disabled = true; $('bt-start').textContent = 'Starting…';
+  const ok = await post('/battery/start', body);
+  $('bt-start').disabled = false; $('bt-start').textContent = 'Start battery test';
+  if (ok) loadBattery(true);
+});
+$('bt-stim').addEventListener('click', async () => {
+  if (await post('/battery/stimulus', { phone_time_ms: Date.now() })) { $('bt-stim-note').textContent = `Stimulus started logged at ${new Date().toLocaleTimeString([], { hour12: false })}.`; }
+});
+twoTap($('bt-stop'), 'Tap again to stop', () => post('/battery/stop').then(() => loadBattery(true)));
+async function loadBattery(force) {
+  if (!force && performance.now() - btListAt < 5000) return; btListAt = performance.now();
+  let j; try { j = await (await fetch('/battery')).json(); } catch { return; }
+  const key = JSON.stringify(j.runs); if (key === btListKey) return; btListKey = key;
+  const box = $('bt-list'); box.textContent = '';
+  if (!j.runs.length) { const e = document.createElement('div'); e.className = 'empty'; e.textContent = 'No battery runs yet.'; box.append(e); return; }
+  for (const r of j.runs) {
+    const s = r.summary || {}, d = r.detail || {};
+    const label = [{ running: 'running', finished: 'finished', stopped: 'finishing', interrupted: 'interrupted (power lost)' }[r.state] || r.state || '',
+      d.last_elapsed_s != null ? duration(d.last_elapsed_s) : '', d.clips_saved ? `${d.clips_saved} clips` : '', d.bangs != null ? `${d.bangs} bangs` : ''].filter(Boolean).join(' · ');
+    const row = runRow(r, `/battery/${r.id}`, label, loadBattery);
+    box.append(row);
+    if (r.state && r.state !== 'running') {
+      const det = document.createElement('details'); det.className = 'explain'; det.style.margin = '0 0 4px';
+      det.innerHTML = '<summary>Edit after the run</summary><div class="fgrid"><label class="fl">USB meter at end (Wh)<input class="field" data-n="meter_end_wh" inputmode="decimal"></label><label class="fl wide">End notes<input class="field" data-n="end_notes"></label></div><button class="btn" style="margin-top:8px">Save notes</button>';
+      const [wh, nt] = det.querySelectorAll('input');
+      wh.value = r.notes.meter_end_wh ?? ''; nt.value = r.notes.end_notes ?? '';
+      det.querySelector('button').addEventListener('click', async () => {
+        if (await post(`/battery/${r.id}/notes`, { meter_end_wh: wh.value, end_notes: nt.value })) { toast('Notes saved; the zip is being rebuilt'); setTimeout(() => loadBattery(true), 4000); }
+      });
+      box.append(det);
+    }
+  }
+}
+function renderBattery(b) {
+  const running = !!(b && b.running);
+  $('bt-form').hidden = running; $('bt-run').hidden = !running;
+  const pk = last && last.packet;
+  if (!running && pk && pk.settings && document.activeElement !== $('bt-volume')) $('bt-volume').value = pk.settings.TARGET_SPEECH_DBFS;
+  $('bt-start').disabled = !connected;
+  const chip = $('bt-chip');
+  if (running) {
+    chip.textContent = b.clips_enabled ? 'Running, saving clips' : 'Running'; chip.className = 'chip neg';
+    $('bt-elapsed').textContent = duration(b.elapsed_s || 0);
+    $('bt-sub').textContent = b.max_hours ? `Stops after ${b.max_hours} h` : 'Runs until the power bank dies or you stop it';
+    $('bt-rows').textContent = b.rows;
+    $('bt-clips').textContent = b.clips_enabled === false && b.clips_off_reason ? `${b.clips_saved}, off` : `${b.clips_saved}`;
+    $('bt-clips-sub').textContent = b.clips_off_reason ? `Switched off: ${b.clips_off_reason}` : `${b.clips_skipped || 0} skipped · ${b.bangs || 0} bangs`;
+    $('bt-temp').textContent = `${b.last_temp_c != null ? fmt(b.last_temp_c, 1) + ' °C' : '–'} · ${b.last_throttled || '–'}`;
+    $('bt-ss').textContent = `Sukoon ${b.sukoon || '–'}`; $('bt-ss').className = 'chip' + (b.sukoon === 'on' ? '' : ' warn');
+  } else { chip.textContent = 'Ready'; chip.className = 'chip'; }
+  if ((b && b.id) !== btLastId) { btLastId = b && b.id; loadBattery(true); }
+}
+
+/* ---------- passive attenuation test ---------- */
+const ps = { info: null, step: 'intro', level: -30, playing: null, audio: null, buffer: null, gain: null, result: null, busy: false, msg: '', ramp: null };
+const PS_STEPS = [['roles', 'Choose which card is the outer and the inner mic'], ['open_silence', 'Silence, earbuds off'], ['ramp', 'Raise the pink noise until it is loud enough'],
+  ['open', 'Pink noise, earbuds off'], ['worn_silence', 'Silence, earbuds on'], ['worn', 'Pink noise, earbuds on'], ['claps', 'Soft claps (optional)'], ['finish', 'Result']];
+async function loadPassive() {
+  try { ps.info = await (await fetch('/passive')).json(); } catch { return; }
+  if (ps.info.session && ps.step === 'intro') ps.step = nextPassiveStep(ps.info.session);
+  renderPassive(); renderPassiveList();
+}
+function nextPassiveStep(s) {
+  const d = s.done || [];
+  if (!d.includes('open_silence')) return 'roles';
+  if (!d.includes('open')) return 'ramp';
+  if (!d.includes('worn_silence')) return 'worn_silence';
+  if (!d.includes('worn')) return 'worn';
+  return 'claps';
+}
+async function phoneNoise(levelDb) {           // phone playback: the same pink_noise.wav, looped, at levelDb re the file (never above 0)
+  if (levelDb === null) { if (ps.playing) { try { ps.playing.stop(); } catch {} ps.playing = null; } return; }
+  if (!ps.audio) ps.audio = new (window.AudioContext || window.webkitAudioContext)();
+  if (ps.audio.state === 'suspended') await ps.audio.resume();
+  if (!ps.buffer) ps.buffer = await ps.audio.decodeAudioData(await (await fetch('/passive/pink_noise.wav')).arrayBuffer());
+  if (!ps.gain) { ps.gain = ps.audio.createGain(); ps.gain.connect(ps.audio.destination); }
+  ps.gain.gain.setTargetAtTime(Math.pow(10, Math.min(0, levelDb) / 20), ps.audio.currentTime, 0.05);
+  if (!ps.playing) { const src = ps.audio.createBufferSource(); src.buffer = ps.buffer; src.loop = true; src.connect(ps.gain); src.start(); ps.playing = src; }
+}
+async function psPost(url, body) {
+  try {
+    const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) });
+    const j = await r.json(); if (!r.ok && !j.error) j.error = 'The Pi refused that request.'; return j;
+  } catch { return { ok: false, error: 'That request didn’t reach the Pi.' }; }
+}
+async function psRecord(name, withNoise) {
+  const phone = ps.info.session.playback === 'phone';
+  if (withNoise && phone) { await phoneNoise(ps.level); await new Promise((r) => setTimeout(r, 700)); }
+  if (!withNoise && phone) await phoneNoise(null);
+  const j = await psPost('/passive/record', { name, ...(withNoise ? { level_db: ps.level } : {}) });
+  if (phone && name !== 'probe') await phoneNoise(null);
+  return j;
+}
+async function psRamp() {                      // never start loud: from -30 dB up in 3 dB steps, hard cap 0 dB (the file's level)
+  ps.ramp = { running: true, share: null };
+  ps.level = ps.info.safety.start_db; renderPassive();
+  while (ps.ramp && ps.ramp.running) {
+    const j = await psRecord('probe', true);
+    if (!j.ok && !j.clipped && !('loud_enough' in j)) { ps.msg = j.error; break; }
+    ps.ramp.share = j.share_over_target; ps.ramp.valid = j.valid_bands;
+    if (j.clipped) { ps.level = Math.max(ps.info.safety.start_db, ps.level - 6); ps.msg = 'A mic clipped, so the level went back 6 dB. Move the speaker further away if this repeats.'; break; }
+    if (j.loud_enough) { ps.msg = `Loud enough at ${fmt(ps.level, 0)} dB: the noise is at least 12 dB above silence in most bands on both mics.`; ps.step = 'open'; break; }
+    if (ps.level >= ps.info.safety.max_db) { ps.msg = `Reached the safety cap and the noise is still not 12 dB above silence in most bands (${Math.round(100 * Math.min(j.share_over_target.outer, j.share_over_target.inner))}%). Move the speaker closer to the mics or make the room quieter, then raise again. You can also continue: bands under 10 dB are marked invalid.`; ps.step = 'open'; break; }
+    ps.level = Math.min(ps.info.safety.max_db, ps.level + ps.info.safety.step_db); renderPassive();
+  }
+  await phoneNoise(null); ps.ramp = null; renderPassive();
+}
+function renderPassive() {
+  const box = $('ps-body'), i = ps.info; if (!i) return; box.textContent = '';
+  const chip = $('ps-chip'); chip.textContent = i.session ? (i.session.dry_run ? 'Dry run' : 'In progress') : i.problem ? 'Not ready' : 'Ready'; chip.className = 'chip' + (i.problem && !i.session ? ' warn' : '');
+  const add = (html) => { const d = document.createElement('div'); d.innerHTML = html; box.append(d); return d; };
+  const btn = (text, fn, primary) => { const b = document.createElement('button'); b.className = 'btn' + (primary ? ' primary' : ''); b.textContent = text; b.disabled = ps.busy || !connected; b.addEventListener('click', fn); return b; };
+  const line = (...bs) => { const d = document.createElement('div'); d.className = 'btn-line'; d.append(...bs); box.append(d); };
+  if (ps.msg) add(`<div class="note-box">${ps.msg.replace(/</g, '&lt;')}</div>`);
+  if (!i.session) {
+    add(`<p class="help">Measures how much the earbuds block on their own, per 1/3 octave, with Sukoon off. You need both sound cards plugged in (one mic just outside the ear, one under the earbud), a quiet room, and a speaker about 1 m away. Each step is a few seconds.</p>`);
+    if (i.problem) add(`<div class="note-box warn"><span class="warn-icon" aria-hidden="true"></span><span>${i.problem}</span></div>`);
+    add(`<div class="fgrid" style="margin-top:10px"><label class="fl">Pink noise plays from<select class="field" id="ps-play"><option value="phone">This phone’s speaker (same file as before)</option><option value="pi">A speaker on the Pi’s 3.5 mm jack</option></select></label><label class="fl">Notes (optional)<input class="field" id="ps-notes"></label></div>`);
+    const dry = add(`<label class="row two" style="margin-top:8px"><span>Dry run with one card<span class="sub">Uses the card’s two inputs. Checks the steps and the files only; the numbers mean nothing.</span></span><input type="checkbox" class="toggle" id="ps-dry"></label>`);
+    line(btn('Start passive test', async () => {
+      const body = { playback: $('ps-play').value, notes: $('ps-notes').value, dry_run: $('ps-dry').checked };   // read before re-rendering
+      ps.busy = true; renderPassive();
+      const j = await psPost('/passive/begin', body);
+      ps.busy = false; ps.msg = j.ok ? '' : j.error; if (j.ok) ps.step = j.session.dry_run ? 'open_silence' : 'roles'; await loadPassive();
+    }, !i.problem));
+    return;
+  }
+  const s = i.session, idx = PS_STEPS.findIndex((x) => x[0] === ps.step);
+  const ol = document.createElement('ol'); ol.className = 'steps';
+  PS_STEPS.forEach(([k, t], n) => { const li = document.createElement('li'); li.textContent = t; li.className = n < idx ? 'done' : n === idx ? 'now' : ''; ol.append(li); }); box.append(ol);
+  add(`<p class="help">Outer mic: <b>${s.roles.outer.label}</b>${s.dry_run ? ' input 1' : ''} · Inner mic: <b>${s.roles.inner.label}</b>${s.dry_run ? ' input 2' : ''} · Pink noise from ${s.playback === 'phone' ? 'this phone' : 'the Pi’s jack'}</p>`);
+  const step = ps.step;
+  if (step === 'roles') {
+    add(`<p class="help">Pick which card is the outer mic (just outside the ear) and which is the inner mic (under the earbud). Detect: tap the outer mic a few times during the 4 seconds.</p>`);
+    const sel = (role) => `<select class="field" id="ps-${role}">${i.cards.map((c) => `<option value="${c.usbid}"${c.usbid === s.roles[role].usbid ? ' selected' : ''}>${c.label} (${c.usbid})</option>`).join('')}</select>`;
+    add(`<div class="fgrid"><label class="fl">Outer mic${sel('outer')}</label><label class="fl">Inner mic${sel('inner')}</label></div>`);
+    line(btn('Detect by tapping', async () => { ps.busy = true; ps.msg = 'Tap the outer mic now, a few times…'; renderPassive(); const j = await psPost('/passive/roles', { detect: true }); ps.busy = false; ps.msg = j.ok ? 'Found the outer mic from the taps. Check the choice below.' : j.error; await loadPassive(); }),
+      btn('Use this choice', async () => { const j = await psPost('/passive/roles', { outer: $('ps-outer').value, inner: $('ps-inner').value }); ps.msg = j.ok ? '' : j.error; if (j.ok) ps.step = 'open_silence'; await loadPassive(); }, true));
+  } else if (step === 'open_silence' || step === 'worn_silence') {
+    add(step === 'open_silence' ? `<p class="help">Put both mics side by side at the ear position, no earbuds. Keep the room quiet and still. Records 3 s of silence (the noise floor).</p>`
+      : `<p class="help">Now put the earbuds on as normal with the inner mic under one earbud, the outer mic just outside that ear. Same speaker position, nothing playing. Records 3 s of silence.</p>`);
+    line(btn('Record silence', async () => { ps.busy = true; ps.msg = 'Recording silence…'; renderPassive(); const j = await psRecord(step, false); ps.busy = false; ps.msg = j.ok ? '' : j.error; if (j.ok) ps.step = step === 'open_silence' ? 'ramp' : 'worn'; await loadPassive(); }, true));
+  } else if (step === 'ramp') {
+    add(`<div class="note-box warn"><span class="warn-icon" aria-hidden="true"></span><span>Hearing safety: the noise starts quiet (${i.safety.start_db} dB) and rises 3 dB at a time, never above the file’s own level (0 dB). ${s.playback === 'phone' ? 'Set the phone volume to about half now and don’t change it during the test.' : 'Set the speaker volume to about half now and don’t change it.'} Keep your ears at least 1 m from the speaker. Stop if it is uncomfortable.</span></div>`);
+    if (ps.ramp) add(`<p class="help">Playing at ${fmt(ps.level, 0)} dB… ${ps.ramp.share ? `${Math.round(100 * Math.min(ps.ramp.share.outer, ps.ramp.share.inner))}% of bands 12 dB above silence (needs 75%)` : ''}</p>`);
+    line(ps.ramp ? btn('Stop the noise', () => { ps.ramp.running = false; }) : btn('Start raising the noise', () => { ps.msg = ''; psRamp(); }, true));
+  } else if (step === 'open' || step === 'worn') {
+    add(`<p class="help">${step === 'open' ? 'Earbuds still off, both mics at the ear position.' : 'Earbuds on, inner mic under the earbud.'} Plays the pink noise at ${fmt(ps.level, 0)} dB for 8 s and records both mics.</p>`);
+    line(btn(step === 'open' ? 'Record, earbuds off' : 'Record, earbuds on', async () => {
+      ps.busy = true; ps.msg = 'Recording with the pink noise…'; renderPassive();
+      const j = await psRecord(step, true); ps.busy = false;
+      ps.msg = j.ok ? `${j.valid_bands} of 21 bands at least 10 dB above silence.` : j.error;
+      if (j.ok) ps.step = step === 'open' ? 'worn_silence' : 'claps'; await loadPassive();
+    }, true), ...(step === 'open' ? [btn('Raise the level again', () => { ps.step = 'ramp'; renderPassive(); })] : []));
+  } else if (step === 'claps') {
+    add(`<p class="help">Optional: earbuds on, clap softly about 1 m away, 10 times, 1 s apart (15 s). Loud claps clip the mic and are rejected.</p>`);
+    line(btn('Record claps', async () => { ps.busy = true; ps.msg = 'Recording claps for 15 s…'; renderPassive(); const j = await psRecord('claps', false); ps.busy = false; ps.msg = j.ok ? `${(j.claps.reduction_db || []).length} claps found.` : j.error; if (j.ok) ps.step = 'finish'; await loadPassive(); }),
+      btn('Skip claps', () => { ps.step = 'finish'; renderPassive(); }, true));
+  } else if (step === 'finish') {
+    if (!ps.result) {
+      add(`<label class="row two"><span>Include the recordings in the zip<span class="sub">Needed to check the result later. About 3 MB.</span></span><input type="checkbox" class="toggle" id="ps-keep" checked></label>`);
+      line(btn('Work out the result', async () => { const keep = $('ps-keep').checked; ps.busy = true; ps.msg = 'Working it out…'; renderPassive(); const j = await psPost('/passive/finish', { save_recordings: keep }); ps.busy = false; ps.msg = j.ok ? '' : j.error; if (j.ok) ps.result = j; renderPassive(); renderPassiveList(true); }, true));
+    }
+  }
+  if (ps.result) showPassiveResult(ps.result, box, btn, line);
+  if (s && !ps.result) line(btn('Cancel the test', async () => { await phoneNoise(null); if (ps.ramp) ps.ramp.running = false; await psPost('/passive/cancel'); ps.step = 'intro'; ps.msg = ''; await loadPassive(); }));
+}
+function showPassiveResult(r, box, btn, line) {
+  const sm = r.summary;
+  const d = document.createElement('div');
+  d.innerHTML = `<div class="row two"><span>Average insertion loss<span class="sub">${sm.valid_bands} of ${sm.bands} bands valid${sm.speech_range_300_4000_db != null ? ` · speech range 300 Hz to 4 kHz ${fmt(sm.speech_range_300_4000_db, 1)} dB` : ''}</span></span><span class="big">${sm.mean_insertion_loss_db != null ? fmt(sm.mean_insertion_loss_db, 1) + ' dB' : '–'}</span></div>
+    <div class="spec ilg" style="margin-top:10px"><svg id="ps-graph" role="img" aria-label="Insertion loss per band"></svg></div>
+    <div class="legend"><span><i style="background:var(--series-out)"></i>Insertion loss, valid bands</span><span><i class="box" style="background:transparent;outline:1px solid var(--faint)"></i>Invalid (under 10 dB above silence)</span></div>
+    <div class="table-wrap" style="margin-top:10px"><table class="il-table"><thead><tr><th>Band</th><th>Loss (dB)</th><th>Valid</th></tr></thead><tbody>${r.bands.map((f, j) => `<tr class="${r.valid[j] ? '' : 'invalid'}"><td>${hzText(f)}Hz</td><td>${r.valid[j] ? fmt(r.loss_db[j], 1) : '–'}</td><td>${r.valid[j] ? 'yes' : 'no'}</td></tr>`).join('')}</tbody></table></div>`;
+  box.append(d);
+  const a = document.createElement('a'); a.className = 'btn primary'; a.href = `/passive/${sm.run}/download`; a.setAttribute('download', ''); a.textContent = 'Download zip';
+  line(a, btn('New test', () => { ps.result = null; ps.step = 'intro'; ps.msg = ''; loadPassive(); }));
+  requestAnimationFrame(() => drawIL(r));
+}
+function drawIL(r) {
+  const svg = $('ps-graph'); if (!svg || !svg.clientWidth) return;
+  const W = svg.clientWidth, H = svg.clientHeight, L = 36, R = 10, T = 12, B = 22, NS = 'http://www.w3.org/2000/svg';
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.textContent = '';
+  const el = (t, a, x) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); if (x != null) e.textContent = x; svg.append(e); return e; };
+  const vals = r.loss_db, lo = Math.min(-5, Math.floor(Math.min(...vals) / 5) * 5), hi = Math.max(10, Math.ceil(Math.max(...vals) / 5) * 5);
+  const lx = (f) => L + (Math.log10(f) - Math.log10(89)) / (Math.log10(11200) - Math.log10(89)) * (W - L - R);
+  const ly = (v) => T + (hi - v) / (hi - lo) * (H - T - B);
+  for (let v = lo; v <= hi; v += 5) { el('line', { x1: L, x2: W - R, y1: ly(v), y2: ly(v), class: 'grid' }); el('text', { x: L - 6, y: ly(v) + 3, class: 'tick', 'text-anchor': 'end' }, String(v).replace('-', '−')); }
+  for (const f of [125, 250, 500, 1000, 2000, 4000, 8000]) el('text', { x: lx(f), y: H - 6, class: 'tick', 'text-anchor': 'middle' }, hzText(f));
+  const pts = r.bands.map((f, j) => [lx(f), ly(vals[j]), r.valid[j]]);
+  const path = pts.filter((p) => p[2]).map((p, k) => `${k ? 'L' : 'M'}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join('');
+  if (path) el('path', { d: path, class: 'l-out' });
+  for (const [x, y, ok] of pts) el('circle', { cx: x, cy: y, r: 3.5, fill: ok ? 'var(--series-out)' : 'none', stroke: ok ? 'var(--series-out)' : 'var(--faint)', 'stroke-width': 1.5 });
+}
+let psListKey = '';
+async function renderPassiveList(force) {
+  const i = ps.info; if (!i) return;
+  if (force) { try { i.runs = (await (await fetch('/passive')).json()).runs; } catch {} }
+  const key = JSON.stringify(i.runs); if (key === psListKey && !force) return; psListKey = key;
+  const box = $('ps-list'); box.textContent = '';
+  if (!i.runs.length) { const e = document.createElement('div'); e.className = 'empty'; e.textContent = 'No passive runs yet.'; box.append(e); return; }
+  for (const r of i.runs) {
+    const s = r.summary || {};
+    const label = r.legacy ? 'Command-line run' : s.valid_bands != null ? `${s.valid_bands} of ${s.bands} bands valid${s.mean_insertion_loss_db != null ? ` · ${fmt(s.mean_insertion_loss_db, 1)} dB average` : ''}` : 'Unfinished';
+    box.append(runRow({ ...r, zip: true }, `/passive/${r.id}`, label, () => loadPassive()));
+  }
+}
+
+/* ---------- rendering ---------- */
+const isRunning = () => !!(connected && last && !['Off', 'Starting', 'Stopping'].includes(last.status));
+function setControlsEnabled(on) {
+  document.querySelectorAll('.zone').forEach((z) => {
+    z.classList.toggle('disabled-zone', !on);
+    z.querySelectorAll('input, button').forEach((el) => { if (!el.closest('[data-goto]') && !el.dataset.goto) el.disabled = !on; });
+  });
+  document.querySelectorAll('[data-offnote]').forEach((n) => { n.hidden = on || !connected; });
+}
+const meters = { in: { level: FLOOR_DB, target: FLOOR_DB }, out: { level: FLOOR_DB, target: FLOOR_DB } };
+
+function render(d) {
+  last = d; connected = true; lastGood = Date.now();
+  clockOffset = d.now - Date.now() / 1000;
+  $('b-offline').hidden = true;
+  $('conn-text').textContent = 'Connected'; $('conn-dot').className = 'dot pos'; $('conn').className = 'badge pos';
+  const rec = d.recording || {};
+  $('rec-badge').hidden = !rec.active;
+  if (rec.active) $('rec-badge').setAttribute('aria-label', `Recording to storage${rec.label ? ': ' + rec.label : ''}. Open Tests.`);
+  if (d.control) { const c = d.control; $('pw-card').textContent = c.card ? `Sound card: ${c.card.label}${c.card.port ? ' · USB port ' + c.card.port : ''}` : c.card_missing ? 'Sound card missing. The audio was stopped.' : 'No sound card. Power off, plug one in, power on.'; renderCard(c); }
+  const p = d.packet, running = !['Off', 'Starting', 'Stopping'].includes(d.status);
+  if (d.control) { renderPower(d); renderChecks(d.control); }
+  renderLatency(d);
+  if (d.test_versions) renderVersions(d.test_versions, d.control && d.control.test_version, p && p.state ? p.state.test_version : null);
+  updateReview(d, running);
+  setControlsEnabled(running);
+  if (d.history.length) {
+    if (d.history.length > 1) history = d.history.slice();
+    else if (!history.length || d.history[0][0] > history[history.length - 1][0]) history.push(d.history[0]);
+    const cutoff = d.now - 11; while (history.length && history[0][0] < cutoff) history.shift();
+  }
+  const ge = $('graph-empty');
+  ge.hidden = running || review.active;
+  if (!running && !review.active) ge.textContent = { Starting: 'Starting up.', Stopping: 'Turning off.' }[d.status] || 'Sukoon is off. Levels appear when you turn it on.';
+  const speech = !!(p && running && ((p.vad || 0) >= 0.5 || p.voice_hold));
+  $('speech-text').textContent = speech ? 'Speech detected' : 'No speech'; $('speech-dot').className = 'dot' + (speech ? ' pos' : '');
+  if (!p) { meters.in.target = meters.out.target = FLOOR_DB; }
+  else {
+    const w = p.window || {};
+    meters.in.target = w.in_peak_dbfs; meters.out.target = w.out_peak_dbfs;
+    const a = p.adaptive || {};
+    $('s-noise').textContent = a.noise_floor_dbfs === undefined ? '–' : `${fmt(a.noise_floor_dbfs, 0)} dBFS`;
+    $('s-gain').textContent = a.output_gain_db === undefined ? '–' : `${a.output_gain_db >= 0 ? '+' : '−'}${Math.abs(a.output_gain_db).toFixed(0)} dB`;
+    $('s-bangs').textContent = p.pop_triggers ?? 0;
+    defaults = p.defaults || defaults;
+    document.querySelectorAll('.toggle[data-key]').forEach((el) => { el.checked = !!current(el.dataset.key, p.state[el.dataset.key]); });
+    document.querySelectorAll('[data-bypass-chip]').forEach((c) => { c.hidden = !p.state.bypass; });
+    $('bg-off').hidden = p.state.pop_guard_enabled !== false;
+    document.querySelectorAll('.slider[data-key]').forEach((el) => {
+      if (document.activeElement === el && pending[el.dataset.key]) return;
+      const v = current(el.dataset.key, p.settings[el.dataset.key]); if (v === undefined) return;
+      el.value = el.dataset.invert ? Number(el.dataset.invert) - v : v; el.paint();
+    });
+    const rs = $('room-slider');
+    if (!(document.activeElement === rs && pending.FLOOR_MIN_DB)) {
+      const mn = current('FLOOR_MIN_DB', p.settings.FLOOR_MIN_DB), mx = current('FLOOR_MAX_DB', p.settings.FLOOR_MAX_DB);
+      if (mn !== undefined) { rs.value = 36 - mn; rs.paint({ FLOOR_MIN_DB: mn, FLOOR_MAX_DB: mx }); }
+    }
+    renderBangSens(p.settings);
+    const eqNow = ['EQ_100', 'EQ_400', 'EQ_1000', 'EQ_2500', 'EQ_5000'].map((k) => p.settings[k]).join(',');
+    document.querySelectorAll('[data-eq]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.eq.split(',').map(Number).join(',') === eqNow)));
+    const l = p.live || {};
+    const mean = l.processing_ms_mean_1s, budget = $('budget');
+    $('p-mean').textContent = `${fmt(mean, 2)} ms`;
+    budget.firstElementChild.style.width = `${Math.min(100, 10 * (mean || 0))}%`;
+    budget.classList.toggle('hot', mean > 7); budget.classList.toggle('over', mean > 10);
+    $('p-max').textContent = `${fmt(l.processing_ms_max, 2)} ms`;
+    $('p-over').textContent = l.over_budget_frames ?? '–';
+    $('p-under').textContent = l.output_underflows ?? '–';
+    $('p-overflow').textContent = l.input_overflows ?? '–';
+    $('p-clip').textContent = l.frames !== undefined ? `${l.input_rail_samples} / ${l.output_clipped_samples}` : '–';
+    $('l-total').textContent = d.estimated_latency_ms ? `About ${fmt(d.estimated_latency_ms, 0)} ms` : '–';
+    $('l-algo').textContent = l.algorithm_delay_ms !== undefined ? `${fmt(l.algorithm_delay_ms + l.frame_ms, 0)} ms` : '–';
+    $('l-dev').textContent = l.device_input_latency_ms !== undefined ? `${fmt(l.device_input_latency_ms, 0)} + ${fmt(l.device_output_latency_ms, 0)} ms` : '–';
+  }
+  renderMic(d.mic, running);
+  $('about-ver').textContent = d.control && d.control.test_version != null ? `Test ${d.control.test_version}` : '–';
+  renderTimed(d.timed_test);
+  renderBattery(d.battery);
+  renderSystem(d.system || {});
+  renderStorage((d.system || {}).storage);
+  renderLog(d.events, d.totals);
+  renderAttenuation(d.attenuation || {}, d.events || [], p, running);
+  renderSpectrum(d.spectrum, d.spectrum_live);
+}
+
+function renderSystem(s) {
+  if (s.power) { const el = $('y-power'); el.textContent = s.power.label; el.className = 'chip' + (s.power.level === 'bad' ? ' neg' : s.power.level === 'warn' ? ' warn' : ''); el.title = s.power.raw; }
+  $('y-cpu').textContent = s.cpu_pct !== undefined ? `${fmt(s.cpu_pct, 0)}% of 4 cores` : '–';
+  $('y-temp').textContent = s.temp_c ? `${fmt(s.temp_c, 1)} °C${s.temp_c > 80 ? ', hot' : s.temp_c > 70 ? ', warm' : ''}` : '–';
+  $('y-clock').textContent = s.clock_mhz ? `${(s.clock_mhz / 1000).toFixed(2)} GHz · ${s.governor}` : '–';
+  $('y-uptime').textContent = s.pi_uptime_s ? duration(s.pi_uptime_s) : '–';
+}
+
+function bytes(n) {
+  if (!(n >= 0)) return '–';
+  for (const [u, v] of [['TB', 1e12], ['GB', 1e9], ['MB', 1e6], ['KB', 1e3]]) if (n >= v) return `${(n / v).toFixed(n / v >= 100 ? 0 : 1)} ${u}`;
+  return `${n} B`;
+}
+function renderStorage(st) {
+  if (!st || !st.disk_total) return;
+  const pct = (v) => `${Math.max(0, 100 * v / st.disk_total)}%`;
+  const sys = Math.max(0, st.disk_used - st.recordings_bytes);
+  $('st-rec').style.width = pct(st.recordings_bytes); $('st-sys').style.width = pct(sys);
+  const bar = $('st-bar'); bar.setAttribute('aria-valuenow', String(Math.round(100 * st.disk_used / st.disk_total)));
+  bar.setAttribute('aria-valuetext', `${bytes(st.disk_used)} of ${bytes(st.disk_total)} used, ${bytes(st.disk_free)} free`);
+  const low = st.disk_free < 2 * st.run_disk_bytes;
+  $('st-head').textContent = `${bytes(st.disk_used)} of ${bytes(st.disk_total)} used`;
+  $('st-l-rec').textContent = `Recordings ${bytes(st.recordings_bytes)}`;
+  $('st-l-sys').textContent = `System ${bytes(sys)}`;
+  $('st-l-free').textContent = `Free ${bytes(st.disk_free)}` + (low ? ', almost full' : '');
+  const m = st.record_minutes_left;
+  $('st-left').textContent = (m >= 120 ? `About ${Math.floor(m / 60)} h` : `About ${m} min`) + (low ? ', low' : '');
+  $('st-left-sub').textContent = `${bytes(st.run_disk_bytes / 10)} per minute; a 10-minute run takes ${bytes(st.run_disk_bytes)}`;
+  $('st-runs').textContent = `${st.recordings_runs} ${st.recordings_runs === 1 ? 'run' : 'runs'} · ${bytes(st.recordings_bytes)}`;
+  const ramLow = st.ram_available < 2 * st.run_ram_bytes;
+  $('st-ram').textContent = `${bytes(st.ram_available)} free` + (ramLow ? ', low' : '');
+  $('st-ram-sub').textContent = `Of ${bytes(st.ram_total)}. A 10-minute recording holds ${bytes(st.run_ram_bytes)} until Sukoon turns off`;
+}
+
+function renderAttenuation(at, events, p, running) {
+  const dB = (v) => (v >= 0 ? '−' : '+') + Math.abs(v).toFixed(0) + ' dB';
+  for (const kind of ['bang', 'alarm']) {
+    const a = at[kind];
+    $('at-' + kind).textContent = a ? dB(a.last) : '–';
+    $('at-' + kind + '-sub').textContent = a ? `Last one. Typical ${dB(a.median)}, least ${dB(a.min)}, over ${a.n}` : 'None yet';
+  }
+  const amb = at.ambient;
+  $('at-amb').textContent = amb ? dB(amb.reduction_db) : '–';
+  $('at-amb-sub').textContent = amb ? `Mic ${fmt(amb.in_dbfs, 0)} dBFS to earbuds ${fmt(amb.out_dbfs, 0)} dBFS, last 5 s` : 'While on, outside speech';
+  // Live card
+  const b = at.bang;
+  $('s-typ').textContent = b ? b.median.toFixed(0) : 'None'; $('s-typ-u').textContent = b ? 'dB' : '';
+  if (!p) $('s-bangs').textContent = String((last && last.totals && last.totals.bang) || 0);
+  $('bangs-when').textContent = running ? 'This run' : 'Since the dashboard started';
+  const lb = events.find((e) => e.kind === 'bang');
+  const now = Date.now() / 1000 + clockOffset;
+  if (lb) {
+    $('lb-sub').textContent = `${clockTime(lb.time)}, ${duration(now - lb.time)} ago`;
+    $('lb-chip').hidden = lb.reduction_db == null; $('lb-chip').textContent = lb.reduction_db != null ? `${lb.reduction_db.toFixed(0)} dB quieter` : '';
+    $('lb-dot').className = 'dot' + (now - lb.time < 10 ? ' o2' : '');
+  } else { $('lb-sub').textContent = 'None yet'; $('lb-chip').hidden = true; $('lb-dot').className = 'dot'; }
+  const al = at.alarm, alarmNow = !!(p && p.alarm_active);
+  $('al-chip').textContent = String(p ? p.alarm_events ?? 0 : al ? al.n : 0);
+  $('al-dot').className = 'dot' + (alarmNow ? ' o2' : '');
+  $('bang-now').hidden = !(running && ((p && p.pop_hold) || (lb && now - lb.time < 3)));
+  $('al-sub').textContent = alarmNow ? 'Alarm now: turned down, still audible.' : al ? `Turned down by ${al.median.toFixed(0)} dB typical, never removed.` : 'None yet. Alarms are turned down, never removed.';
+}
+
+/* ---------- frequency ---------- */
+let specView = 'live', specLast = null, specLive = false;
+const pctOf = (db) => 100 * (1 - Math.pow(10, -db / 20));
+const pctText = (db) => db >= 0 ? `${pctOf(db) >= 99.95 ? '99.9' : pctOf(db).toFixed(pctOf(db) >= 99 ? 1 : 0)}%` : `${(-db).toFixed(0)} dB louder`;
+const hzText = (f) => f >= 1000 ? `${+(f / 1000).toFixed(f >= 10000 ? 0 : 1)}k` : String(f);
+const dbCut = (d) => d >= 60 ? '60+' : d.toFixed(0);
+const minSec = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+document.querySelectorAll('#sp-views button').forEach((b) => b.addEventListener('click', () => {
+  specView = b.dataset.spec;
+  document.querySelectorAll('#sp-views button').forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+  drawSpectrum();
+}));
+function specSeries() {
+  const s = specLast; if (!s) return null;
+  if (specView === 'live') return { inn: s.live.in_db, out: s.live.out_db, note: specLive ? 'dBFS per 1/3 octave, last 0.5 s' : 'Off, last values of the run' };
+  if (specView === 'bang') { const b = s.bang; if (!b) return { empty: 'No bang yet' }; return { inn: b.in_db, out: b.out_db, note: `Bang at ${clockTime(b.time)}, first 80 ms` }; }
+  const w = s.windows.length ? s.windows[s.windows.length - 1] : s.current;
+  if (!w || !w.in_band_db || !w.seconds) return { empty: 'Collecting the first 3 minutes' };
+  return { inn: w.in_band_db, out: w.out_band_db, note: w.final ? `Average of the 3 min to ${clockTime(w.time)}` : `Average so far, ${minSec(w.seconds)} of 3 min` };
+}
+function drawSpectrum() {
+  const svg = $('sp-chart'), tip = $('sp-tip'); if (!svg.clientWidth) return;
+  const W = svg.clientWidth, H = svg.clientHeight || 230;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  const ser = specSeries(), NS = 'http://www.w3.org/2000/svg';
+  const el = (tag, attrs, text) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; svg.append(e); return e; };
+  svg.textContent = '';
+  if (!ser || ser.empty) { el('text', { x: W / 2, y: H / 2, class: 'msg' }, ser ? ser.empty : (connected ? 'Turn Sukoon on to see the spectrum' : 'Connecting to the Pi')); $('sp-note').textContent = 'dBFS per 1/3 octave'; tip.hidden = true; return; }
+  $('sp-note').textContent = ser.note;
+  const bands = specLast.bands, L = 38, R = 10, Tp = 24, B = 22;
+  const lx = (f) => L + (Math.log10(f) - Math.log10(89)) / (Math.log10(11200) - Math.log10(89)) * (W - L - R);
+  const top = Math.min(0, Math.ceil(Math.max(...ser.inn, ...ser.out) / 10) * 10 + 10), bottom = Math.max(-120, top - 80);
+  const ly = (v) => Tp + (top - Math.max(bottom, Math.min(top, v))) / (top - bottom) * (H - Tp - B);
+  for (let v = top; v >= bottom; v -= 20) { el('line', { x1: L, x2: W - R, y1: ly(v), y2: ly(v), class: 'grid' }); el('text', { x: L - 6, y: ly(v) + 3, class: 'tick', 'text-anchor': 'end' }, v === 0 ? '0' : `−${-v}`); }
+  for (const f of [125, 250, 500, 1000, 2000, 4000, 8000]) el('text', { x: lx(f), y: H - 6, class: 'tick', 'text-anchor': 'middle' }, hzText(f));
+  const red = bands.map((_, j) => ser.inn[j] - ser.out[j]);
+  const half = (f) => [f / Math.pow(2, 1 / 6), f * Math.pow(2, 1 / 6)];
+  bands.forEach((f, j) => {
+    if (red[j] < 3 || ser.inn[j] < bottom) return;
+    const [a, b] = half(f); el('rect', { x: lx(a) + 1, width: Math.max(1, lx(b) - lx(a) - 2), y: ly(ser.inn[j]), height: Math.max(1, ly(ser.out[j]) - ly(ser.inn[j])), rx: 2, class: 'cut' });
+  });
+  const path = (vals) => vals.map((v, j) => `${j ? 'L' : 'M'}${lx(bands[j]).toFixed(1)},${ly(v).toFixed(1)}`).join('');
+  el('path', { d: path(ser.inn), class: 'l-in' }); el('path', { d: path(ser.out), class: 'l-out' });
+  const order = bands.map((_, j) => j).filter((j) => red[j] >= 3 && ser.inn[j] > bottom + 10).sort((a, b) => red[b] - red[a]);
+  const labelX = (j) => Math.min(W - R - 22, Math.max(L + 24, lx(bands[j])));
+  const picked = []; for (const j of order) { if (picked.every((k) => Math.abs(labelX(k) - labelX(j)) > 52)) picked.push(j); if (picked.length === 3) break; }
+  for (const j of picked) el('text', { x: labelX(j), y: Math.max(12, ly(ser.inn[j]) - 7), class: 'cut-label' }, `−${dbCut(red[j])} dB`);
+  const best = picked.length ? picked[0] : null;
+  svg.setAttribute('aria-label', 'Microphone and earbud spectrum. ' + (best !== null ? `Most reduced: ${hzText(bands[best])}Hz, ${red[best].toFixed(0)} dB quieter.` : 'No band reduced by 3 dB or more.'));
+  const hair = el('line', { y1: Tp, y2: H - B, class: 'hair', visibility: 'hidden' });
+  svg.onpointermove = (e) => {
+    const r = svg.getBoundingClientRect(), x = e.clientX - r.left;
+    let j = 0; bands.forEach((f, k) => { if (Math.abs(lx(f) - x) < Math.abs(lx(bands[j]) - x)) j = k; });
+    hair.setAttribute('x1', lx(bands[j])); hair.setAttribute('x2', lx(bands[j])); hair.setAttribute('visibility', 'visible');
+    const d = red[j];
+    tip.innerHTML = `<b>${hzText(bands[j])}Hz</b><br>Microphone ${fmt(ser.inn[j], 0)} dBFS<br>Earbuds ${fmt(ser.out[j], 0)} dBFS<br>` +
+      (d >= 0 ? `<b>${dbCut(d)} dB quieter (${pctText(Math.min(d, 60))})</b>` : `<b>${(-d).toFixed(0)} dB louder</b>`);
+    tip.hidden = false; const tw = tip.offsetWidth; tip.style.left = `${Math.min(W - tw, Math.max(0, lx(bands[j]) + 10 - (lx(bands[j]) > W / 2 ? tw + 20 : 0)))}px`;
+  };
+  svg.onpointerleave = () => { tip.hidden = true; hair.setAttribute('visibility', 'hidden'); };
+}
+let specKey = '';
+function renderSpectrum(s, live) {
+  specLast = s || null; specLive = !!live;
+  if (!s) { if (tab === 'live') drawSpectrum(); return; }
+  const key = JSON.stringify([specView === 'live' ? s.live : null, s.bang && s.bang.time, s.windows.length, specView === 'avg' ? Math.floor((s.current.seconds || 0) / 5) : 0, live, connected]);
+  if (key !== specKey && tab === 'live') { specKey = key; drawSpectrum(); }
+  const cur = s.current, win = s.windows, lastW = win.length ? win[win.length - 1] : null, W = s.window_s;
+  const sgn = (v) => `${v >= 0 ? '−' : '+'}${Math.abs(v).toFixed(1)} dB`;
+  if (lastW) {
+    $('sp-avg').textContent = pctText(lastW.reduction_db);
+    $('sp-avg-sub').textContent = `${sgn(lastW.reduction_db)} over the 3 min to ${clockTime(lastW.time)} · mic ${fmt(lastW.in_dbfs, 0)} to earbuds ${fmt(lastW.out_dbfs, 0)} dBFS · ${lastW.bangs} ${lastW.bangs === 1 ? 'bang' : 'bangs'}` + (live ? ` · next in ${minSec(Math.max(0, W - cur.seconds))}` : '');
+  } else {
+    $('sp-avg').textContent = '–';
+    $('sp-avg-sub').textContent = live ? `First result in ${minSec(Math.max(0, W - cur.seconds))}` : 'First result after 3 minutes on';
+  }
+  $('sp-cur').textContent = cur.seconds ? pctText(cur.reduction_db) : '–';
+  $('sp-cur-sub').textContent = cur.seconds ? `${sgn(cur.reduction_db)} · ${minSec(cur.seconds)} of 3 min` + (live ? '' : ' · run stopped') : 'Shown while on';
+  const b = s.bang, bs = s.bangs;
+  $('sp-bang').textContent = b ? `${pctText(b.overall_db)} quieter` : '–';
+  $('sp-bang-sub').textContent = b ? `−${b.overall_db.toFixed(1)} dB over 100 Hz to 10 kHz · loudest band ${hzText(b.peak_hz)}Hz −${b.peak_db.toFixed(0)} dB · ${clockTime(b.time)}` : 'None yet';
+  $('sp-bangs').textContent = bs ? `median ${pctText(bs.median_db)}` : '–';
+  $('sp-bangs-sub').textContent = bs ? `${bs.n} ${bs.n === 1 ? 'bang' : 'bangs'} this run · median −${bs.median_db.toFixed(1)} dB · least −${bs.min_db.toFixed(1)} dB (${pctText(bs.min_db)})` : 'None yet';
+  const hist = $('sp-hist'); const hkey = JSON.stringify(win.map((w) => w.time));
+  if (hist.dataset.key !== hkey) {
+    hist.dataset.key = hkey; hist.textContent = ''; $('sp-hist-wrap').hidden = win.length < 2; $('sp-hist-sum').textContent = `Earlier 3-minute windows (${win.length})`;
+    for (const w of win.slice().reverse()) {
+      const row = document.createElement('div'); row.className = 'row two';
+      const lab = document.createElement('span'); lab.textContent = `3 min to ${clockTime(w.time)}`;
+      const sub = document.createElement('span'); sub.className = 'sub'; sub.textContent = `${sgn(w.reduction_db)} · mic ${fmt(w.in_dbfs, 0)} to earbuds ${fmt(w.out_dbfs, 0)} dBFS · ${w.bangs} ${w.bangs === 1 ? 'bang' : 'bangs'}`;
+      lab.append(sub); const val = document.createElement('span'); val.className = 'val'; val.textContent = pctText(w.reduction_db);
+      row.append(lab, val); hist.append(row);
+    }
+  }
+}
+window.addEventListener('resize', () => { if (tab === 'live') drawSpectrum(); });
+
+/* transients log: the stream carries the newest 100; the full 500 come from /events while Home is open */
+let lastLogKey = '', logEvents = [], eventsLoadedKey = '', eventsLoading = false, eventsAt = 0;
+const LOG_KEEP = 500;
+async function loadEvents(force) {
+  if (eventsLoading || (!force && performance.now() - eventsAt < 1000)) return;
+  eventsLoading = true; eventsAt = performance.now();
+  try { const r = await fetch('/events'); if (r.ok) { const j = await r.json(); if (Array.isArray(j.events)) { logEvents = j.events.slice(0, LOG_KEEP); lastLogKey = ''; } } } catch {}
+  finally { eventsLoading = false; if (last) renderLog(last.events || [], last.totals || {}); }
+}
+function renderLog(events, totals) {
+  const head = events.length ? `${events[0].time}|${events[0].reduction_db}|${events.length}` : '0';
+  if (tab === 'live' && head !== eventsLoadedKey) { eventsLoadedKey = head; loadEvents(); }
+  // merge: stream rows are newest; keep older ones fetched from /events
+  const newestKnown = logEvents.length ? logEvents[0].time : -Infinity;
+  let rows = events.length && events[events.length - 1].time > newestKnown ? events.slice() : events.concat(logEvents.filter((e) => e.time < (events.length ? events[events.length - 1].time : Infinity)));
+  rows = rows.slice(0, LOG_KEEP);
+  const key = JSON.stringify([rows.length, rows.length && rows[0].time, rows.length && rows[0].reduction_db, rows.length && rows[rows.length - 1].time]);
+  if (key === lastLogKey) return; lastLogKey = key;
+  const box = $('log'), keepTop = box.scrollTop; box.textContent = '';
+  if (!rows.length) { const e = document.createElement('div'); e.className = 'empty'; e.textContent = 'No transients yet.'; box.append(e); }
+  else {
+    const h = document.createElement('div'); h.className = 'lh'; h.innerHTML = '<span>Time</span><span>Event</span><span>Reduction</span>'; box.append(h);
+    const frag = document.createDocumentFragment();
+    for (const e of rows) {
+      const row = document.createElement('div'); row.className = 'lr';
+      const time = document.createElement('span'); time.className = 'log-time'; time.textContent = clockTime(e.time);
+      const what = document.createElement('span'); if (e.kind === 'bang') what.className = 'ev-bang';
+      what.textContent = { bang: 'Bang muted', alarm: 'Alarm turned down', version: `Switched to Test ${e.count}` }[e.kind] || 'Clipping guard';
+      const n = document.createElement('span'); n.className = 'val';
+      n.textContent = [e.reduction_db != null ? `−${e.reduction_db.toFixed(0)} dB` : '', e.kind !== 'version' && e.count > 1 ? `×${e.count}` : ''].filter(Boolean).join(' · ');
+      row.append(time, what, n); frag.append(row);
+    }
+    box.append(frag); box.scrollTop = keepTop;
+  }
+  $('log-count').textContent = rows.length ? `${rows.length} ${rows.length === 1 ? 'entry' : 'entries'}, newest first` : '–';
+  $('totals').textContent = `Since the dashboard started: bang guard ${totals.bang}, alarms turned down ${totals.alarm ?? 0}, clipping guard ${totals.clip}. The last ${LOG_KEEP} are kept.`;
+}
+
+/* ---------- graph ---------- */
+const canvas = $('graph'), ctx = canvas.getContext('2d');
+const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+let colors = {};
+const readColors = () => { colors = { in: css('--series-in'), out: css('--series-out'), outFill: css('--series-out-fill'), band: css('--series-bang-fill'), speech: css('--series-speech'), grid: css('--rule'), text: css('--faint'), font: css('--font') }; };
+readColors();
+const THEMES = ['auto', 'light', 'dark'], darkQuery = matchMedia('(prefers-color-scheme: dark)');
+function applyTheme(pref) {
+  const root = document.documentElement, theme = pref === 'auto' ? (darkQuery.matches ? 'dark' : 'light') : pref;
+  root.dataset.themePref = pref; root.dataset.theme = theme;
+  const meta = document.querySelector('meta[name="theme-color"]'); if (meta) meta.content = theme === 'dark' ? '#0d1012' : '#f2f4f5';
+  $('theme-btn').setAttribute('aria-label', `Colour mode: ${{ auto: 'automatic', light: 'light', dark: 'dark' }[pref]}. Tap to change.`);
+  readColors(); if (tab === 'live') drawSpectrum();
+}
+let themePref = 'auto';
+try { const t = localStorage.getItem('sukoon-theme'); if (THEMES.includes(t)) themePref = t; } catch {}
+applyTheme(themePref);
+$('theme-btn').addEventListener('click', () => {
+  themePref = THEMES[(THEMES.indexOf(themePref) + 1) % THEMES.length];
+  try { localStorage.setItem('sukoon-theme', themePref); } catch {}
+  applyTheme(themePref);
+  toast({ auto: 'Colour mode: automatic', light: 'Colour mode: light', dark: 'Colour mode: dark' }[themePref]);
+});
+darkQuery.addEventListener('change', () => { if (themePref === 'auto') applyTheme('auto'); });
+const y = (db, h) => { const v = Math.max(FLOOR_DB, Math.min(0, db)); return 8 + (h - 18) * (v / FLOOR_DB); };
+
+const review = { points: [], end: 0, span: 10, active: false, loadedFor: -1, loading: false };
+async function loadReview(count) {
+  if (review.loading) return; review.loading = true;
+  try {
+    const pts = (await (await fetch('/history')).json()).points || [];
+    review.points = pts; review.loadedFor = count;
+    if (pts.length) review.end = pts[pts.length - 1][0];
+    syncReviewSlider();
+  } catch {} finally { review.loading = false; }
+}
+function reviewBounds() {
+  const pts = review.points; if (!pts.length) return null;
+  const first = pts[0][0], lastT = pts[pts.length - 1][0], span = review.span === 'all' ? Math.max(1, lastT - first) : review.span;
+  return { first, last: lastT, span, min: Math.min(lastT, first + span) };
+}
+function clampReview() { const b = reviewBounds(); if (b) review.end = Math.max(b.min, Math.min(b.last, review.end)); }
+function syncReviewSlider() {
+  const b = reviewBounds(), el = $('review-pos'); if (!b) return;
+  clampReview(); el.min = b.min; el.max = b.last; el.value = review.end; el.parentElement.hidden = b.last - b.min < 0.1;
+  $('review-label').textContent = `${clockTime(review.end - b.span)} to ${clockTime(review.end)} of ${duration(b.last - b.first)}`;
+  $('legend-span').textContent = review.span === 'all' ? 'dBFS, whole run' : `dBFS, ${review.span < 60 ? review.span + ' s' : '1 min'} window`;
+}
+function updateReview(d, running) {
+  const want = !running && d.status === 'Off' && d.run_history_points > 0;
+  if (want && review.loadedFor !== d.run_history_points) loadReview(d.run_history_points);
+  if (want !== review.active) {
+    review.active = want; $('review').hidden = !want; canvas.classList.toggle('reviewing', want);
+    if (!want) { review.points = []; review.loadedFor = -1; $('legend-span').textContent = 'dBFS, last 10 s'; }
+  }
+}
+$('review-pos').addEventListener('input', (e) => { review.end = Number(e.target.value); syncReviewSlider(); });
+if (coarse) guardTouch($('review-pos'));
+document.querySelectorAll('#review-span button').forEach((b) => b.addEventListener('click', () => {
+  review.span = b.dataset.span === 'all' ? 'all' : Number(b.dataset.span);
+  document.querySelectorAll('#review-span button').forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+  syncReviewSlider();
+}));
+let drag = null;
+canvas.addEventListener('pointerdown', (e) => {
+  if (!review.active || !review.points.length) return;
+  drag = { x: e.clientX, y: e.clientY, end: review.end, horizontal: e.pointerType === 'mouse' };
+  canvas.setPointerCapture(e.pointerId);
+});
+canvas.addEventListener('pointermove', (e) => {
+  if (!drag) return;
+  const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+  if (!drag.horizontal) { if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return; drag.horizontal = Math.abs(dx) > Math.abs(dy); if (!drag.horizontal) { drag = null; return; } }
+  const b = reviewBounds(); review.end = drag.end - dx / Math.max(1, canvas.clientWidth - 34) * b.span; syncReviewSlider();
+});
+const endDrag = () => { drag = null; };
+canvas.addEventListener('pointerup', endDrag); canvas.addEventListener('pointercancel', endDrag);
+
+function drawGraph() {
+  const dpr = window.devicePixelRatio || 1, w = canvas.clientWidth, h = canvas.clientHeight;
+  if (!w || !h) return;
+  if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) { canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr); }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
+  const L = 34, R = 8;
+  const reviewing = review.active && review.points.length > 1, b = reviewing ? reviewBounds() : null;
+  const frozen = !connected && history.length;   // disconnected: hold the last 10 s still
+  const span = reviewing ? b.span : 10, now = reviewing ? review.end : frozen ? history[history.length - 1][0] : Date.now() / 1000 + clockOffset - 0.12;
+  const x = (t) => L + (w - L - R) - (now - t) / span * (w - L - R);
+  const source = reviewing ? review.points : history;
+  if (!$('graph-empty').hidden) return;
+  ctx.font = `11px ${colors.font}`; ctx.fillStyle = colors.text; ctx.strokeStyle = colors.grid; ctx.lineWidth = 1; ctx.textAlign = 'right';
+  for (const db of [0, -20, -40, -60]) {
+    const yy = Math.round(y(db, h)) + 0.5; ctx.beginPath(); ctx.moveTo(L, yy); ctx.lineTo(w - R, yy); ctx.stroke();
+    ctx.fillText(db === 0 ? '0' : '−' + -db, L - 8, yy + 4);
+  }
+  let pts = source.filter((p) => p[0] > now - span - 0.2 && p[0] <= now + 0.2);
+  if (pts.length > 1200) { const step = Math.ceil(pts.length / 1200); pts = pts.filter((_, i) => i % step === 0); }
+  const cell = Math.max(0.1, (pts.length > 1 ? (pts[pts.length - 1][0] - pts[0][0]) / (pts.length - 1) : 0.1));
+  if (pts.length < 2) return;
+  ctx.save(); ctx.beginPath(); ctx.rect(L, 0, w - L - R, h); ctx.clip();
+  for (let i = 0; i < pts.length; i++) {
+    const x0 = Math.max(L, x(pts[i][0] - cell)), x1 = x(pts[i][0]); if (x1 <= x0) continue;
+    if (pts[i][3]) { ctx.fillStyle = colors.band; ctx.fillRect(x0, 0, x1 - x0, h); }
+    if (pts[i][4]) { ctx.fillStyle = colors.speech; ctx.globalAlpha = .55; ctx.fillRect(x0, h - 4, x1 - x0, 4); ctx.globalAlpha = 1; }
+  }
+  ctx.beginPath(); ctx.moveTo(x(pts[0][0]), h);
+  for (const p of pts) ctx.lineTo(x(p[0]), y(p[2], h));
+  ctx.lineTo(x(pts[pts.length - 1][0]), h); ctx.closePath(); ctx.fillStyle = colors.outFill; ctx.fill();
+  ctx.lineJoin = 'round';
+  ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(x(p[0]), y(p[1], h)) : ctx.moveTo(x(p[0]), y(p[1], h)));
+  ctx.strokeStyle = colors.in; ctx.lineWidth = 1.5; ctx.stroke();
+  ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(x(p[0]), y(p[2], h)) : ctx.moveTo(x(p[0]), y(p[2], h)));
+  ctx.strokeStyle = colors.out; ctx.lineWidth = 2.25; ctx.stroke();
+  ctx.restore();
+}
+
+let lastFrame = performance.now();
+function animate(t) {
+  const dt = Math.min(0.1, (t - lastFrame) / 1000); lastFrame = t;
+  if (tab === 'live' && !document.hidden) {
+    for (const [name, m] of Object.entries(meters)) {
+      const target = Number.isFinite(m.target) ? Math.max(FLOOR_DB, m.target) : FLOOR_DB;
+      m.level = target > m.level ? target : Math.max(target, m.level - 30 * dt);
+      $('b-' + name).style.width = `${100 * (1 - m.level / FLOOR_DB)}%`;
+      const live = isRunning() || !!(!connected && last && last.packet);
+      $('v-' + name).textContent = !live ? (connected ? 'Off' : 'Waiting') : m.target > FLOOR_DB ? fmt(m.target, 0) : 'Silent';
+      $('u-' + name).hidden = !live || !(m.target > FLOOR_DB);
+    }
+    drawGraph();
+  }
+  requestAnimationFrame(animate);
+}
+requestAnimationFrame(animate);
+
+/* ---------- data: SSE with polling fallback (same rates as before) ---------- */
+let polling = null;
+function startPolling() {
+  if (polling) return;
+  polling = setInterval(async () => { try { render(await (await fetch('/metrics')).json()); } catch { offline(); } }, 250);
+}
+function offline() {
+  connected = false;
+  $('conn-text').textContent = 'Disconnected'; $('conn-dot').className = 'dot neg'; $('conn').className = 'badge neg';
+  if (last) {
+    $('b-offline').hidden = false;
+    $('b-offline-time').textContent = `Saved ${clockTime(lastGood / 1000)}`;
+    renderPower(last); renderChecks(last.control); lastVersionKey = ''; renderVersions(last.test_versions, last.control.test_version, null);
+    lastLatKey = ''; renderLatency(last);
+  } else {
+    $('pw-state').textContent = 'Can’t reach the Pi'; $('pw-dot').className = 'dot neg';
+    $('pw-sub').textContent = 'Check that your phone is on the Sukoon Wi-Fi hotspot.';
+    $('b-offline').hidden = false; $('b-offline-time').textContent = 'Nothing saved';
+    $('graph-empty').textContent = 'Not connected to the Pi.';
+  }
+  $('power').disabled = true; $('mic-level').disabled = true;
+  setControlsEnabled(false);
+  document.querySelectorAll('[data-check]').forEach((el) => { el.disabled = true; });
+}
+if ('EventSource' in window) {
+  const es = new EventSource('/stream'); let failures = 0;
+  es.addEventListener('init', (e) => { failures = 0; history = []; render(JSON.parse(e.data)); });
+  es.onmessage = (e) => { failures = 0; render(JSON.parse(e.data)); };
+  es.onerror = () => { if (++failures >= 3) { offline(); if (es.readyState === EventSource.CLOSED) startPolling(); } };
+} else startPolling();
+loadPresets();
+setControlsEnabled(false);
+try { const t = localStorage.getItem('ss-tab'); if (t && $('p-' + t)) showTab(t); } catch {}
+</script>
+</body>
+</html>

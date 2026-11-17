@@ -1,0 +1,32 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Built on the Pi by system/install.sh (src/build_rnnoise.py)
+src/librnnoise.so
+src/librnnoise.json
+
+# Local configuration (holds the hotspot password)
+system/config.env
+.env
+*.env
+dashboard/soundcard.json
+
+# Runtime state, logs and recordings (never commit audio of people)
+dashboard/ui_state.json
+dashboard/pipeline.log
+dashboard/recordings/
+logs/
+report/
+live_*.wav
+test_*.wav
+*.wav
+!dashboard/sounds/*.wav
+*.zip
+
+# Editors and OS
+.DS_Store
+*.swp
+.vscode/
+.idea/

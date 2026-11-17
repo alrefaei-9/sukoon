@@ -1,0 +1,21 @@
+# Sukoon installation settings.
+# Copy this file to system/config.env, fill it in, then run: sudo ./system/install.sh
+# system/config.env is ignored by git: never commit it (it holds the hotspot password).
+
+# --- Wi-Fi hotspot (the phone or iPad joins it to open the dashboard) ---
+# yes: the Pi creates its own Wi-Fi network on wlan0 at every boot (no router or internet needed).
+# Note: this uses the Pi's Wi-Fi radio, so the Pi stops using Wi-Fi as a client.
+HOTSPOT_ENABLE=yes
+HOTSPOT_SSID=Sukoon
+# 8 to 63 characters. Required when HOTSPOT_ENABLE=yes.
+HOTSPOT_PASSWORD=
+# Two-letter Wi-Fi regulatory country code (e.g. AE, US, GB). The Pi's Wi-Fi stays off until it is set.
+WIFI_COUNTRY=AE
+
+# --- Name on the network ---
+# The dashboard opens at http://<HOSTNAME>.local:<HTTP_PORT> (mDNS, works on iPhone, iPad and Mac).
+# Leave empty to keep the Pi's current hostname.
+PI_HOSTNAME=sukoon
+
+# --- Dashboard ---
+HTTP_PORT=5000
